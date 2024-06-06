@@ -1,10 +1,9 @@
-package bitcamp.myapp;
+package com.remind;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
-
     public static void main(String[] args) {
         String line = "------------------------------";
         String m_title = "[팀 프로젝트 관리 시스템]";
@@ -18,7 +17,7 @@ public class App {
         String red = "\033[31m";
         String fine = "\033[0m";
         Scanner insert = new Scanner(System.in);
-
+        boolean flag;
         System.out.println(bold + line + fine);
         System.out.println(bold + m_title + fine);
         System.out.println(m_one);
@@ -29,10 +28,15 @@ public class App {
         System.out.println(bold + red + m_six + fine);
         System.out.println(bold + line + fine);
 
-        while (true) {
+        while (true)
+        {
+            flag = false;
             System.out.print("> ");
-                int num = insert.nextInt();
-                switch (num) {
+            try
+            {
+                int num = insert.nextInt();//여기서 오류가 나면 try 들어가야 되니까
+                switch (num)
+                {
                     case 1:
                         System.out.println("회원");
                         break;
@@ -49,11 +53,19 @@ public class App {
                         System.out.println("도움말");
                         break;
                     case 6:
-                        System.out.println("종료하겠습니다");
+                        System.out.println("종료");
                         insert.close();
-                        return;
+                        break;
                     default:
-                        System.out.println("1~6까지의 숫자를 입력해 주세요");
+                        System.out.println("1~6번까지 숫자를 입력해주세요");
+                }
+            }catch (InputMismatchException e)
+            {
+                insert.nextLine(); //남아있는 문자 값을 읽어들여서 exception이 일어 나지 않게 한다
+                if(!flag)
+                {
+                    System.out.println("문자는 아니되오");
+                }
             }
         }
     }
