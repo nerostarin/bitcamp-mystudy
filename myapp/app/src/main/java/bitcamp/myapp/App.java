@@ -1,6 +1,5 @@
 package bitcamp.myapp;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
@@ -8,53 +7,48 @@ public class App {
     public static void main(String[] args) {
         String line = "------------------------------";
         String m_title = "[팀 프로젝트 관리 시스템]";
-        String m_one = "1. 회원";
-        String m_two = "2. 팀";
-        String m_thr = "3. 프로젝트";
-        String m_fou = "4. 게시판";
-        String m_fiv = "5. 도움말";
-        String m_six = "6. 종료";
         String bold = "\033[1m";
         String red = "\033[31m";
         String fine = "\033[0m";
         Scanner insert = new Scanner(System.in);
+        String[] menus = new String[] {"회원", "팀", "프로젝트", "게시판", "도움말", "종료"};
 
         System.out.println(bold + line + fine);
         System.out.println(bold + m_title + fine);
-        System.out.println(m_one);
-        System.out.println(m_two);
-        System.out.println(m_thr);
-        System.out.println(m_fou);
-        System.out.println(m_fiv);
-        System.out.println(bold + red + m_six + fine);
+
+        for (int i = 0; i< menus.length; i++) {
+            if (menus[i] == ("종료")) {
+                System.out.printf("%s%d. %s%s\n" ,(bold + red) , (i+1), menus[i], fine);
+            }else {
+                System.out.printf("%d. %s\n", (i+1), menus[i]);
+            }
+        }
+
         System.out.println(bold + line + fine);
 
         while (true) {
-            System.out.print("> ");
+            try {
+                System.out.print("> ");
                 int num = insert.nextInt();
-                switch (num) {
-                    case 1:
-                        System.out.println("회원");
+
+                if (num >= 1 && num <= menus.length) {
+                    if (menus[num - 1] == "종료") {
+                        System.out.println("종료합니다.");
                         break;
-                    case 2:
-                        System.out.println("팀");
-                        break;
-                    case 3:
-                        System.out.println("프로젝트");
-                        break;
-                    case 4:
-                        System.out.println("게시판");
-                        break;
-                    case 5:
-                        System.out.println("도움말");
-                        break;
-                    case 6:
-                        System.out.println("종료하겠습니다");
-                        insert.close();
-                        return;
-                    default:
-                        System.out.println("1~6까지의 숫자를 입력해 주세요");
+                    }
+                    System.out.println(menus[num - 1]);
+                } else {
+                    System.out.println("유효한 메뉴 번호가 아닙니다");
+                }
+            }catch (Exception e)
+            {
+                System.out.println("숫자로 메뉴번호를 입력하세요");
+                insert.nextLine();
+                /*insert.nextLine();은 입력 버퍼에 남아 있는 잘못된 입력을 제거하는 역할을 합니다.
+                예외 발생 후 nextLine()을 호출하면, 현재 입력 라인을 읽고 버립니다.
+                이렇게 하면 다음 입력을 받을 때 버퍼가 비어 있어 정상적인 입력을 받을 수 있습니다.*/
             }
         }
+        insert.close();
     }
 }
