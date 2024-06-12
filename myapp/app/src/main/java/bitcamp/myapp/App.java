@@ -1,77 +1,87 @@
 package bitcamp.myapp;
 
-import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class App {
-    static Scanner insert = new Scanner(System.in);
+    static String[] menus = new String[] {
+            "회원",
+            "팀",
+            "프로젝트",
+            "게시판",
+            "도움말",
+            "종료"
+    };
 
-    static String[] menus = new String[] {"회원", "팀", "프로젝트", "게시판", "도움말", "종료"};
+    static java.util.Scanner keyboardScanner = new java.util.Scanner(System.in);
 
     public static void main(String[] args) {
+
+
         printMenu();
         String command;
         while (true) {
             try {
                 command = prompt();
-
-                if (command.equals("menu"))
-                {
-                    printMenu(); //메소드의 호출
-                }else
-                {
-                    int num = Integer.parseInt(command);
-                    String menuTitle = getMenuTitle(num); //설명하는 변수
-                    if (menuTitle == null) {
-                        System.out.println("유효한 메뉴 번호가 아닙니다");
-                    } else if (menuTitle.equals("종료")) {
-                        System.out.println("종료합니다.");
+                if (command.equals("menu")) {
+                    printMenu();
+                } else {
+                    int menuNo = Integer.parseInt(command);
+                    String printTitle = getMenuTitle(menuNo);
+                    if (printTitle == null) {
+                        System.out.println("유효한 메뉴 번호가 아닙니다.");
+                    } else if(printTitle.equals("종료")){
                         break;
-                    }else {
-                        System.out.println(menuTitle);
+                    }else
+                    {
+                        System.out.println(printTitle);
                     }
                 }
-            }catch (NumberFormatException e){
-                System.out.println("해당되는 문자열이 없습니다");
+            } catch (NumberFormatException ex) {
+                System.out.println("숫자로 메뉴 번호를 입력하세요.");
             }
         }
-        insert.close();
+
+        System.out.println("종료합니다.");
+
+        keyboardScanner.close();
     }
 
     static String getMenuTitle(int menuNo)
     {
         return isValidateMenu(menuNo) ? menus[menuNo-1] : null;
-    /*  if(isValidateMenu(menuNo){
-            return menus[menuNo-1];
-        }
-        return null;*/
     }
 
-    static boolean isValidateMenu(int num)
+    static boolean isValidateMenu(int menuNo)
     {
-        return num >= 1 && num <= menus.length;
+       return menuNo >= 1 && menuNo <= menus.length;
     }
 
     static String prompt()
     {
         System.out.print("> ");
-        return insert.nextLine();
+        return keyboardScanner.nextLine();
     }
 
-    static void printMenu(){
-        String line = "------------------------------";
-        String m_title = "[팀 프로젝트 관리 시스템]";
-        String bold = "\033[1m";
-        String red = "\033[31m";
-        String fine = "\033[0m";
-        System.out.println(bold + line + fine);
-        System.out.println(bold + m_title + fine);
-        for (int i = 0; i< menus.length; i++) {
+    static void printMenu()
+    {
+        String boldAnsi = "\033[1m";
+        String redAnsi = "\033[31m";
+        String resetAnsi = "\033[0m";
+
+        String appTitle = "[팀 프로젝트 관리 시스템]";
+        String line = "----------------------------------";
+
+        System.out.println(boldAnsi + line + resetAnsi);
+        System.out.println(boldAnsi + appTitle + resetAnsi);
+
+        for (int i = 0; i < menus.length; i++) {
             if (menus[i].equals("종료")) {
-                System.out.printf("%s%d. %s%s\n" ,(bold + red) , (i+1), menus[i], fine);
-            }else {
-                System.out.printf("%d. %s\n", (i+1), menus[i]);
+                System.out.printf("%s%d. %s%s\n", (boldAnsi + redAnsi), (i + 1), menus[i], resetAnsi);
+            } else {
+                System.out.printf("%d. %s\n", (i + 1), menus[i]);
             }
         }
-        System.out.println(bold + line + fine);
+
+        System.out.println(boldAnsi + line + resetAnsi);
     }
 }
