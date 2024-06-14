@@ -1,19 +1,14 @@
 package com.remind;
 
-import java.util.Arrays;
-import java.util.Scanner;
-
 public class App {
     static String[] mainMenu = new String[] {"회원", "팀","프로젝트","게시판","도움말","종료"};
 
     static String[][] memberMenu = {
-            {"등록a","목록","조회","변경","삭제"},
-            {"등록b","목록","조회","변경","삭제"},
-            {"등록c","목록","조회","변경","삭제"},
-            {"등록d","목록","조회","변경","삭제"}
+            {"등록","목록","조회","변경","삭제"},
+            {"등록","목록","조회","변경","삭제"},
+            {"등록","목록","조회","변경","삭제"},
+            {"등록","목록","조회","변경","삭제"}
     };
-
-    static java.util.Scanner keyboardScanner = new java.util.Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -22,7 +17,7 @@ public class App {
 
         while (true) {
             try {
-                command = prompt("메인");
+                command = Prompt.input("메인> ");
                 if (command.equals("menu")) {
                     printMenu();
                 } else {
@@ -50,7 +45,7 @@ public class App {
 
         System.out.println("종료합니다.");
 
-        keyboardScanner.close();
+        Prompt.close();
     }
 
     static void processMenu(String printTitle, String[] memberMenu)
@@ -59,40 +54,43 @@ public class App {
         printMenu2(memberMenu);
 
         while (true) {
-            String command = prompt("메인/" + printTitle);
+            String command = Prompt.input(String.format("메인/%s> ",printTitle));
             if (command.equals("9")) {
                 break;
             } else if (command.equals("menu")) {
+                System.out.println("[" + printTitle + "]");
                 printMenu2(memberMenu);
             }else {
                 try
                 {
                     int menuNo = Integer.parseInt(command);
-                    String printTitleMenu = getMenuTitle(menuNo, memberMenu);
+                    String printSubTitle = getMenuTitle(menuNo, memberMenu);
 
-                    if (printTitleMenu == null) {
+                    if (printSubTitle == null) {
                         System.out.println("유효한 메뉴 번호가 아닙니다.");
-                    }else if(printTitleMenu.equals("등록a"))
-                    {
-                        signIn();
-                    }else if(printTitleMenu.equals("목록"))
-                    {
-                        printUser();
                     }
                     else {
-                        System.out.println(printTitleMenu);
+                        switch (printTitle)
+                        {
+                            case "회원":
+                                UserCommand.executeMemberCommand(printSubTitle);
+                                break;
+                            case "팀":
+                                TeamCommand.executeTeamCommand(printSubTitle);
+                                break;
+                            case "프로젝트":
+                                executeProjectCommand(printSubTitle);
+                                break;
+                            case "게시판":
+                                executeBoardCommand(printSubTitle);
+                                break;
+                            default :
+                                System.out.printf("%s 메뉴의 명령을 처리할 수 없습니다.\n", printSubTitle);
+                        }
                     }
                 }catch (NumberFormatException e) {
                     System.out.println("숫자로 메뉴 번호를 입력하세요.");
                 }
-            }
-        }
-    }
-    static void printUser() {
-        System.out.println("번호\t이름\t이메일");
-        for (int i = 1; i < User.userData.length; i++) {
-            if (User.userData[i].length > 0) {
-                System.out.printf("%d\t%s\t%s\n", i, User.userData[i][0], User.userData[i][1]);
             }
         }
     }
@@ -104,12 +102,6 @@ public class App {
     static boolean isValidateMenu(int menuNo, String[] menus)
     {
         return menuNo >= 1 && menuNo <= menus.length;
-    }
-
-    static String prompt(String menu)
-    {
-        System.out.print(menu+"> ");
-        return keyboardScanner.nextLine();
     }
 
     static void printMenu()
@@ -143,16 +135,11 @@ public class App {
         System.out.println("9. 이전");
     }
 
-    static void signIn() {
-        System.out.printf("이름? ");
-        User.name = keyboardScanner.nextLine();
-        System.out.printf("이메일? ");
-        User.email = keyboardScanner.nextLine();
-        System.out.printf("암호? ");
-        User.password = keyboardScanner.nextLine();
-        System.out.printf("연락처? ");
-        User.tell = keyboardScanner.nextLine();
+    static void executeProjectCommand(String command) {
+        System.out.printf("프로젝트 %s\n", command);
+    }
 
-        User.insertData();
+    static void executeBoardCommand(String command) {
+        System.out.printf("게시판 %s\n", command);
     }
 }
