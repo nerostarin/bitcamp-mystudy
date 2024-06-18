@@ -1,5 +1,9 @@
 package com.remind;
 
+import com.remind.command.ProjectCommand;
+import com.remind.command.UserCommand;
+import com.remind.util.Prompt;
+
 public class App {
     static String[] mainMenu = new String[] {"회원", "팀","프로젝트","게시판","도움말","종료"};
 
@@ -75,11 +79,8 @@ public class App {
                             case "회원":
                                 UserCommand.executeMemberCommand(printSubTitle);
                                 break;
-                            case "팀":
-                                TeamCommand.executeTeamCommand(printSubTitle);
-                                break;
                             case "프로젝트":
-                                executeProjectCommand(printSubTitle);
+                                ProjectCommand.executeProjectCommand(printSubTitle);
                                 break;
                             case "게시판":
                                 executeBoardCommand(printSubTitle);
@@ -134,11 +135,6 @@ public class App {
         }
         System.out.println("9. 이전");
     }
-
-    static void executeProjectCommand(String command) {
-        System.out.printf("프로젝트 %s\n", command);
-    }
-
     static void executeBoardCommand(String command) {
         System.out.printf("게시판 %s\n", command);
     }

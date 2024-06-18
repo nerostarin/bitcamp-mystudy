@@ -1,4 +1,7 @@
-package com.remind;
+package com.remind.command;
+
+import com.remind.vo.User;
+import com.remind.util.Prompt;
 
 public class UserCommand {
 
@@ -7,7 +10,7 @@ public class UserCommand {
     static  int userLength = 0;
     static int userNo = 0;
 
-    static void executeMemberCommand(String command) {
+    public static void executeMemberCommand(String command) {
         System.out.printf("[%s]\n", command);
 
         switch (command)
@@ -33,10 +36,10 @@ public class UserCommand {
     static void addUser()
     {
         User user = new User();
-        user.name = Prompt.input("이름? ");
-        user.email = Prompt.input("이메일? ");
-        user.password = Prompt.input("비밀번호? ");
-        user.tel = Prompt.input("연락처? ");
+        user.setName(Prompt.input("이름?"));
+        user.setEmail(Prompt.input("이메일?"));
+        user.setPassword(Prompt.input("암호?"));
+        user.setTel(Prompt.input("연락처?"));
         users[userLength++] = user;
     }
 
@@ -46,7 +49,7 @@ public class UserCommand {
         for (int i = 0 ; i < userLength; i++)
         {
             User user =  users[i];
-            System.out.printf("%d %s %s\n",i+1,user.name,user.email);
+            System.out.printf("%d %s %s\n", i + 1, user.getName(), user.getEmail());
         }
     }
 
@@ -59,9 +62,9 @@ public class UserCommand {
             return;
         }
         User user = users[userNo - 1];
-        System.out.printf("이름: %s \n", user.name);
-        System.out.printf("이메일: %s \n", user.email);
-        System.out.printf("전화번호: %s \n", user.tel);
+        System.out.printf("이름: %s \n", user.getName());
+        System.out.printf("이메일: %s \n", user.getEmail());
+        System.out.printf("전화번호: %s \n", user.getTel());
     }
 
     static void updateUser()
@@ -73,10 +76,10 @@ public class UserCommand {
             return;
         }
         User user = users[userNo - 1];
-        user.name = Prompt.input(String.format("이름 (%s):",user.name));
-        user.email = Prompt.input(String.format("이메일 (%s):",user.email));
-        user.password = Prompt.input("비밀번호 :");
-        user.tel = Prompt.input(String.format("전화번호 (%s):",user.tel));
+        user.setName(Prompt.input("이름 (%s)?", user.getName()));
+        user.setEmail(Prompt.input("이메일 (%s)?", user.getEmail()));
+        user.setPassword(Prompt.input("암호?"));
+        user.setTel(Prompt.input("연락처 (%s)?", user.getTel()));
     }
 
     static void deleteUser() {
@@ -91,5 +94,12 @@ public class UserCommand {
         userLength--;
         users[userLength] = null;
         System.out.println("삭제 헸습니다");
+    }
+
+    public static User findByNo(int userNo) {
+        if (userNo < 1 || userNo > userLength) {
+            return null;
+        }
+        return users[userNo - 1];
     }
 }

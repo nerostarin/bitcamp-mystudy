@@ -18,21 +18,21 @@ import study.oop.clazz.vo.Score;
 //12) 코딩의 일관성을 위해 다른 필드도 getter/setter로 접근하게 만든다.
 //
 public class Test02 {
+  static Score[] scores = {
+      new Score("홍길동", 100, 90, 85),
+      new Score("임꺽정", 90, 80, 75),
+      new Score("유관순", 80, 70, 65)
+  };
   public static void main(String[] args) {
-    Score s1 = new Score("홍길동", 100, 90, 85);
-    Score s2 = new Score("임꺽정", 90, 80, 75);
-    Score s3 = new Score("유관순", 80, 70, 65);
-
-    printAve(s1);
-
-    printAve(s2);
-
-    printAve(s3);
-
+    printScore();
   }
 
-  static void printAve(Score s)
+  static void printScore()
   {
-    System.out.printf("%s: %d, %d, %d, %d, %.1f\n", s.getName(), s.getKor(), s.getEng(), s.getMath(), s.getSum(), s.getAver());
+    for(Score score : scores) {
+      System.out.printf("%s: %d, %d, %d, %d, %.1f\n",
+          score.getName(), score.getKor(), score.getEng(), score.getMath(), score.getSum(), score.getAver());
+
+    }
   }
 }
