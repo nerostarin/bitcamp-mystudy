@@ -35,9 +35,9 @@ public class ProjectCommand {
     private static void addUser() {
        Project project = new Project();
         project.setTitle(Prompt.input("포로젝트 명?"));
-        project.setDescription(Prompt.input("포로젝트 명?"));
-        project.setStartDate(Prompt.input("포로젝트 명?"));
-        project.setDescription(Prompt.input("포로젝트 명?"));
+        project.setDescription(Prompt.input("내용?"));
+        project.setStartDate(Prompt.input("시작일?"));
+        project.setDescription(Prompt.input("종료일?"));
         System.out.println("팀원:");
         addMembers(project);
         projects[projectLength++] = project;
@@ -54,7 +54,7 @@ public class ProjectCommand {
     }
 
     private static void viewUser() {
-       projectNo = Prompt.inputInit("프로젝트 번호?");
+       projectNo = Prompt.inputInt("프로젝트 번호?");
        if (projectNo  < 1 || projectNo > projectLength)
        {
            System.out.println("업는 프로젝트 입니다");
@@ -73,7 +73,7 @@ public class ProjectCommand {
     }
 
     private static void updateUser() {
-        projectNo = Prompt.inputInit("프로젝트 번호?");
+        projectNo = Prompt.inputInt("프로젝트 번호?");
         if (projectNo  < 1 || projectNo > projectLength)
         {
             System.out.println("업는 프로젝트 입니다");
@@ -92,7 +92,7 @@ public class ProjectCommand {
     }
 
     private static void deleteUser() {
-        projectNo = Prompt.inputInit("프로젝트 번호?");
+        projectNo = Prompt.inputInt("프로젝트 번호?");
         if (projectNo  < 1 || projectNo > projectLength)
         {
             System.out.println("업는 프로젝트 입니다");
@@ -110,7 +110,7 @@ public class ProjectCommand {
     {
         while (true)
         {
-            int userNo = Prompt.inputInit("추가할 팀원 번호?(종료: 0)");
+            int userNo = Prompt.inputInt("추가할 팀원 번호?(종료: 0)");
             if (userNo == 0)
             {
                 break;

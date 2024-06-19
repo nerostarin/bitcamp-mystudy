@@ -1,11 +1,12 @@
 package com.remind;
 
+import com.remind.command.BoardCommand;
 import com.remind.command.ProjectCommand;
 import com.remind.command.UserCommand;
 import com.remind.util.Prompt;
 
 public class App {
-    static String[] mainMenu = new String[] {"회원", "팀","프로젝트","게시판","도움말","종료"};
+    static String[] mainMenu = new String[] {"회원", "프로젝트","게시판","도움말","종료"};
 
     static String[][] memberMenu = {
             {"등록","목록","조회","변경","삭제"},
@@ -21,7 +22,7 @@ public class App {
 
         while (true) {
             try {
-                command = Prompt.input("메인> ");
+                command = Prompt.input("메인> ", "");
                 if (command.equals("menu")) {
                     printMenu();
                 } else {
@@ -58,7 +59,7 @@ public class App {
         printMenu2(memberMenu);
 
         while (true) {
-            String command = Prompt.input(String.format("메인/%s> ",printTitle));
+            String command = Prompt.input("메인/%s> ",printTitle);
             if (command.equals("9")) {
                 break;
             } else if (command.equals("menu")) {
@@ -83,7 +84,7 @@ public class App {
                                 ProjectCommand.executeProjectCommand(printSubTitle);
                                 break;
                             case "게시판":
-                                executeBoardCommand(printSubTitle);
+                                BoardCommand.executeBoardCommand(printSubTitle);
                                 break;
                             default :
                                 System.out.printf("%s 메뉴의 명령을 처리할 수 없습니다.\n", printSubTitle);
@@ -134,8 +135,5 @@ public class App {
             System.out.printf("%d. %s\n", (i + 1), menus[i]);
         }
         System.out.println("9. 이전");
-    }
-    static void executeBoardCommand(String command) {
-        System.out.printf("게시판 %s\n", command);
     }
 }
