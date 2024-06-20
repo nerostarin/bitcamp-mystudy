@@ -8,9 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 public class BoardCommand {
 
-    private static final int MAX_SIZE = 100;
-    private static Board[] boards = new Board[MAX_SIZE];
-    private static int boardLength = 0;
     private static int boardNo = 0;
 
     public static void executeBoardCommand(String command) {
@@ -44,7 +41,8 @@ public class BoardCommand {
         board.setDetail(Prompt.input("내용?"));
         board.setDate(dateNow());
         board.setViews(0);
-        boards[boardLength++] = board;
+        board.setNo(Board.getNextSeqNo());
+        BoardList.add(board);
     }
 
     private static String dateNow() {
@@ -59,18 +57,18 @@ public class BoardCommand {
 
     private static void viewBoard() {
         System.out.println("번호 제목 작성일 조회수");
-        for (int i = 0; i < boardLength; i++) {
-            System.out.printf("%d %s %s %s\n", i + 1, boards[i].getName(), boards[i].getDate(), boards[i].getViews());
+        for (Board board : BoardList.toArray()) {
+            System.out.printf("%d %s %s %s\n", board.getNo(), board.getName(), board.getDate(), board.getViews());
         }
     }
 
     private static void listBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
+        Board board = BoardList.findByBoard(boardNo);
+        if (board == null) {
             System.out.println("없는 게시글 입니다");
             return;
         }
-        Board board = boards[boardNo - 1];
         System.out.printf("제목: %s\n", board.getName());
         System.out.printf("내용: %s\n", board.getDetail());
         System.out.printf("작성일: %s\n", board.getDate());
@@ -81,11 +79,11 @@ public class BoardCommand {
 
     private static void updateBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
+        Board board = BoardList.findByBoard(boardNo);
+        if (board == null) {
             System.out.println("없는 게시글 입니다");
             return;
         }
-        Board board = boards[boardNo - 1];
         Prompt.input("제목(%s)?", board.getName());
         Prompt.input("제목(%s)?", board.getDetail());
         System.out.println("변경되었습니다");
@@ -93,15 +91,11 @@ public class BoardCommand {
 
     private static void deleteBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
-            System.out.println("없는 게시글 입니다");
-            return;
+        Board deletedBoard = BoardList.delete(boardNo);
+        if (deletedBoard != null) {
+            System.out.printf("%s 삭제 했습니다", deletedBoard.getName());
         }
-        for (int i = boardNo; i < boardLength; i++) {
-            boards[i - 1] = boards[i];
-        }
-        boardLength--;
-        boards[boardLength] = null;
         System.out.println("삭제 했습니다");
     }
+
 }

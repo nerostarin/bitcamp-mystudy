@@ -5,9 +5,6 @@ import bitcamp.myapp.vo.User;
 
 public class UserCommand {
 
-    private static final int MAX_SIZE = 100;
-    private static User[] users = new User[MAX_SIZE];
-    private static int userLength = 0;
     private static int userNo = 0;
 
     public static void executeUserCommand(String command) {
@@ -41,24 +38,24 @@ public class UserCommand {
         user.setEmail(Prompt.input("이메일?"));
         user.setPassword(Prompt.input("암호?"));
         user.setTel(Prompt.input("연락처?"));
-        users[userLength++] = user;
+        user.setNo(User.getNextSeqNo());
+        UserList.add(user);
     }
 
     private static void listUser() {
         System.out.println("번호 이름 이메일");
-        for (int i = 0; i < userLength; i++) {
-            User user = users[i];
-            System.out.printf("%d %s %s\n", i + 1, user.getName(), user.getEmail());
+        for (User user : UserList.toArray()) {
+            System.out.printf("%d %s %s\n", user.getNo(), user.getName(), user.getEmail());
         }
     }
 
     private static void viewUser() {
         userNo = Prompt.inputInt("회원번호?");
-        if (userNo < 1 || userNo > userLength) {
+        User user = UserList.findByNo(userNo);
+        if (user == null) {
             System.out.println("없는 회원입니다.");
             return;
         }
-        User user = users[userNo - 1];
         System.out.printf("이름: %s \n", user.getName());
         System.out.printf("이메일: %s \n", user.getEmail());
         System.out.printf("전화번호: %s \n", user.getTel());
@@ -66,11 +63,11 @@ public class UserCommand {
 
     private static void updateUser() {
         userNo = Prompt.inputInt("회원번호?");
-        if (userNo < 1 || userNo > userLength) {
+        User user = UserList.findByNo(userNo);
+        if (user == null) {
             System.out.println("없는 회원입니다.");
             return;
         }
-        User user = users[userNo - 1];
         user.setName(Prompt.input("이름 (%s)?", user.getName()));
         user.setEmail(Prompt.input("이메일 (%s)?", user.getEmail()));
         user.setPassword(Prompt.input("암호?"));
@@ -79,21 +76,10 @@ public class UserCommand {
 
     private static void deleteUser() {
         userNo = Prompt.inputInt("회원번호?");
-        if (userNo < 1 || userNo > userLength) {
-            System.out.println("없는 회원입니다.");
-            return;
+        User deletedUser = UserList.delete(userNo);
+        if (deletedUser != null) {
+            System.out.printf("%s 삭제 했습니다", deletedUser.getName());
         }
-        for (int i = userNo; i < userLength; i++) {
-            users[i - 1] = users[i];
-        }
-        users[--userLength] = null;
-        System.out.println("삭제 했습니다");
-    }
-
-    public static User findByNo(int userNo) {
-        if (userNo < 1 || userNo > userLength) {
-            return null;
-        }
-        return users[userNo - 1];
+        System.out.println("없는 회원입니다.");
     }
 }

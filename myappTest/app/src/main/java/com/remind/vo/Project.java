@@ -1,6 +1,9 @@
 package com.remind.vo;
 
 public class Project {
+    private static int seqNo;
+
+    private int no;
     private String title;
     private String description;
     private String startDate;
@@ -8,6 +11,19 @@ public class Project {
     private User[] members = new User[10];
     private int memberSize;
 
+
+    public static int getNextSeqNo()
+    {
+        return ++seqNo;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
+    }
     public boolean containMember(User user)
     {
         for(int i = 0; i < memberSize; i++)
