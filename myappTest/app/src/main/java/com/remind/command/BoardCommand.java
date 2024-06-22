@@ -10,8 +10,8 @@ import java.util.Date;
 public class BoardCommand {
 
     private static int boardNo = 0;
-
-    public static void executeBoardCommand(String command) {
+    BoardList boardList = new BoardList();
+    public void executeBoardCommand(String command) {
         System.out.printf("[%s]\n", command);
 
         switch (command)
@@ -34,29 +34,30 @@ public class BoardCommand {
         }
     }
 
-    static void addBoard()
+     void addBoard()
     {
         Board board = new Board();
         board.setTitle(Prompt.input("제목?"));
         board.setContent(Prompt.input("내용?"));
         board.setCreateDate(new Date());
         board.setNo(Board.getNextSeqNo());
-        BoardList.add(board);
+        boardList.add(board);
     }
 
-    static void listBoard()
+     void listBoard()
     {
         System.out.println("번호 제목 작성일 조회수");
-        for(Board board : BoardList.toArray())
+        for(Object object : boardList.toArray())
         {
+            Board board = (Board) object;
             System.out.printf("%d %s %tY-%3$tm-%3$td %s\n", board.getNo(), board.getTitle(), board.getCreateDate(), board.getViewCount());
         }
     }
 
-    static void viewBoard()
+     void viewBoard()
     {
         boardNo = Integer.parseInt(Prompt.input("게시글 번호?"));
-        Board board = BoardList.findByNo(boardNo);
+        Board board = boardList.findByNo(boardNo);
         if (board == null) {
             System.out.println("없는 회원 입니다");
             return;
@@ -68,10 +69,10 @@ public class BoardCommand {
         System.out.printf("조회수: %d \n", board.getViewCount());
     }
 
-    static void updateBoard()
+     void updateBoard()
     {
         boardNo = Integer.parseInt(Prompt.input("게시글 번호?"));
-        Board board = BoardList.findByNo(boardNo);
+        Board board = boardList.findByNo(boardNo);
         if (board == null) {
             System.out.println("없는 회원 입니다");
             return;
@@ -80,11 +81,13 @@ public class BoardCommand {
         board.setContent(Prompt.input("내용 (%s)?", board.getContent()));
     }
 
-    static void deleteBoard() {
+     void deleteBoard() {
         boardNo = Integer.parseInt(Prompt.input("게시글 번호?"));
-        Board deletedBoard = BoardList.delete(boardNo);
+        Board deletedBoard = boardList.findByNo(boardNo);
         if (deletedBoard != null) {
-            System.out.printf("%s 삭제 했습니다", deletedBoard.getTitle());
+            boardList.remove(boardList.indexOf(deletedBoard));
+            System.out.printf("%s 삭제 했습니다\n", deletedBoard.getTitle());
+            return;
         }
         System.out.println("삭제 헸습니다");
     }

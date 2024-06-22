@@ -6,7 +6,7 @@ import com.remind.command.UserCommand;
 import com.remind.util.Prompt;
 
 public class App {
-    static String[] mainMenu = new String[] {"회원", "프로젝트","게시판","도움말","종료"};
+    static String[] mainMenu = new String[] {"회원", "프로젝트","게시판", "공지사항","도움말","종료"};
 
     static String[][] memberMenu = {
             {"등록","목록","조회","변경","삭제"},
@@ -15,8 +15,19 @@ public class App {
             {"등록","목록","조회","변경","삭제"}
     };
 
-    public static void main(String[] args) {
+     UserCommand userCommand = new UserCommand();
+     ProjectCommand projectCommand = new ProjectCommand(userCommand.getUserList());
+     BoardCommand boardCommand = new BoardCommand();
+     BoardCommand noticeCommand = new BoardCommand();
 
+
+
+    public static void main(String[] args) {
+        new App().execute();
+    }
+
+    void execute()
+    {
         printMenu();
         String command;
 
@@ -36,11 +47,7 @@ public class App {
                         break;
                     } else
                     {
-                        if (menuNo >= 1 && menuNo <= 4) {
-                            processMenu(printTitle, memberMenu[menuNo-1]);
-                        }else {
-                            System.out.println(printTitle);
-                        }
+                        processMenu(printTitle, memberMenu[menuNo-1]);
                     }
                 }
             } catch (NumberFormatException ex) {
@@ -53,7 +60,7 @@ public class App {
         Prompt.close();
     }
 
-    static void processMenu(String printTitle, String[] memberMenu)
+    void processMenu(String printTitle, String[] memberMenu)
     {
         System.out.println("[" + printTitle + "]");
         printMenu2(memberMenu);
@@ -78,13 +85,16 @@ public class App {
                         switch (printTitle)
                         {
                             case "회원":
-                                UserCommand.executeMemberCommand(printSubTitle);
+                                userCommand.executeMemberCommand(printSubTitle);
                                 break;
                             case "프로젝트":
-                                ProjectCommand.executeProjectCommand(printSubTitle);
+                                projectCommand.executeProjectCommand(printSubTitle);
                                 break;
                             case "게시판":
-                                BoardCommand.executeBoardCommand(printSubTitle);
+                                boardCommand.executeBoardCommand(printSubTitle);
+                                break;
+                            case "공지사항":
+                                noticeCommand.executeBoardCommand(printSubTitle);
                                 break;
                             default :
                                 System.out.printf("%s 메뉴의 명령을 처리할 수 없습니다.\n", printSubTitle);
@@ -96,17 +106,17 @@ public class App {
             }
         }
     }
-    static String getMenuTitle(int menuNo, String[] menus)
+    String getMenuTitle(int menuNo, String[] menus)
     {
         return isValidateMenu(menuNo, menus) ? menus[menuNo-1] : null;
     }
 
-    static boolean isValidateMenu(int menuNo, String[] menus)
+    boolean isValidateMenu(int menuNo, String[] menus)
     {
         return menuNo >= 1 && menuNo <= menus.length;
     }
 
-    static void printMenu()
+    void printMenu()
     {
         String boldAnsi = "\033[1m";
         String redAnsi = "\033[31m";
@@ -129,7 +139,7 @@ public class App {
         System.out.println(boldAnsi + line + resetAnsi);
     }
 
-    static void printMenu2(String[] menus)
+    void printMenu2(String[] menus)
     {
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\n", (i + 1), menus[i]);

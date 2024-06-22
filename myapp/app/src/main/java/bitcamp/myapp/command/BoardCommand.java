@@ -9,41 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class BoardCommand {
 
     private static int boardNo = 0;
-
-    public static void executeBoardCommand(String command) {
-        System.out.printf("[%s]\n", command);
-        switch (command) {
-            case "등록":
-                addBoard();
-                break;
-
-            case "조회":
-                viewBoard();
-                break;
-
-            case "목록":
-                listBoard();
-                break;
-
-            case "변경":
-                updateBoard();
-                break;
-
-            case "삭제":
-                deleteBoard();
-                break;
-        }
-    }
-
-    private static void addBoard() {
-        Board board = new Board();
-        board.setName(Prompt.input("제목?"));
-        board.setDetail(Prompt.input("내용?"));
-        board.setDate(dateNow());
-        board.setViews(0);
-        board.setNo(Board.getNextSeqNo());
-        BoardList.add(board);
-    }
+    BoardList boardList = new BoardList();
 
     private static String dateNow() {
         LocalDate currentDate = LocalDate.now();
@@ -55,16 +21,52 @@ public class BoardCommand {
         return currentDate.format(formatter);
     }
 
-    private static void viewBoard() {
+    public void executeBoardCommand(String command) {
+        System.out.printf("[%s]\n", command);
+        switch (command) {
+            case "등록":
+                this.addBoard();
+                break;
+
+            case "조회":
+                this.viewBoard();
+                break;
+
+            case "목록":
+                this.listBoard();
+                break;
+
+            case "변경":
+                this.updateBoard();
+                break;
+
+            case "삭제":
+                this.deleteBoard();
+                break;
+        }
+    }
+
+    private void addBoard() {
+        Board board = new Board();
+        board.setName(Prompt.input("제목?"));
+        board.setDetail(Prompt.input("내용?"));
+        board.setDate(dateNow());
+        board.setViews(0);
+        board.setNo(Board.getNextSeqNo());
+        boardList.add(board);
+    }
+
+    private void viewBoard() {
         System.out.println("번호 제목 작성일 조회수");
-        for (Board board : BoardList.toArray()) {
+        for (Object obj : boardList.toArray()) {
+            Board board = (Board) obj;
             System.out.printf("%d %s %s %s\n", board.getNo(), board.getName(), board.getDate(), board.getViews());
         }
     }
 
-    private static void listBoard() {
+    private void listBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        Board board = BoardList.findByBoard(boardNo);
+        Board board = this.boardList.findByBoard(boardNo);
         if (board == null) {
             System.out.println("없는 게시글 입니다");
             return;
@@ -77,9 +79,9 @@ public class BoardCommand {
 
     }
 
-    private static void updateBoard() {
+    private void updateBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        Board board = BoardList.findByBoard(boardNo);
+        Board board = this.boardList.findByBoard(boardNo);
         if (board == null) {
             System.out.println("없는 게시글 입니다");
             return;
@@ -89,10 +91,11 @@ public class BoardCommand {
         System.out.println("변경되었습니다");
     }
 
-    private static void deleteBoard() {
+    private void deleteBoard() {
         boardNo = Prompt.inputInt("게시글 번호?");
-        Board deletedBoard = BoardList.delete(boardNo);
+        Board deletedBoard = boardList.findByBoard(boardNo);
         if (deletedBoard != null) {
+            boardList.remove(boardList.indexOf(boardNo));
             System.out.printf("%s 삭제 했습니다", deletedBoard.getName());
         }
         System.out.println("삭제 했습니다");

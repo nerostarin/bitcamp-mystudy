@@ -6,8 +6,9 @@ import com.remind.util.Prompt;
 public class UserCommand {
 
     static int userNo = 0;
+    UserList userList = new UserList();
 
-    public static void executeMemberCommand(String command) {
+    public void executeMemberCommand(String command) {
         System.out.printf("[%s]\n", command);
 
         switch (command)
@@ -30,7 +31,7 @@ public class UserCommand {
         }
     }
 
-    static void addUser()
+    public void addUser()
     {
         User user = new User();
         user.setName(Prompt.input("이름?"));
@@ -38,22 +39,23 @@ public class UserCommand {
         user.setPassword(Prompt.input("암호?"));
         user.setTel(Prompt.input("연락처?"));
         user.setNo(User.getNextSeqNo());
-        UserList.add(user);
+        userList.add(user);
     }
 
-    static void listUser()
+     void listUser()
     {
         System.out.println("번호 이름 이메일");
-        for (User user : UserList.toArray()) {
+        for (Object object : userList.toArray()) {
+            User user = (User) object;
             System.out.printf("%d %s %s\n", user.getNo(), user.getName(), user.getEmail());
         }
 
     }
 
-    static void viewUser()
+     void viewUser()
     {
         userNo = Integer.parseInt(Prompt.input("회원번호? "));
-        User user = UserList.findByNo(userNo);
+        User user = userList.findByNo(userNo);
         if (user == null) {
             System.out.println("없는 회원 입니다");
             return;
@@ -63,10 +65,10 @@ public class UserCommand {
         System.out.printf("전화번호: %s \n", user.getTel());
     }
 
-    static void updateUser()
+     void updateUser()
     {
         userNo = Integer.parseInt(Prompt.input("회원번호? "));
-        User user = UserList.findByNo(userNo);
+        User user = userList.findByNo(userNo);
         if (user == null) {
             System.out.println("없는 회원 입니다");
             return;
@@ -77,14 +79,20 @@ public class UserCommand {
         user.setTel(Prompt.input("연락처 (%s)?", user.getTel()));
     }
 
-    static void deleteUser() {
+     void deleteUser() {
         userNo = Integer.parseInt(Prompt.input("회원번호? "));
-        User deletedUser = UserList.delete(userNo);
-        if (deletedUser == null)
+        User deletedUser = userList.findByNo(userNo);
+        if (deletedUser != null)
         {
-            System.out.printf("%s 삭제 했습니다", deletedUser.getName());
+            userList.remove(userList.indexOf(deletedUser));
+            System.out.printf("%s 삭제 했습니다\n", deletedUser.getName());
+            return;
         }
         System.out.println("삭제 헸습니다");
+    }
+
+    public UserList getUserList() {
+        return userList;
     }
 
 }

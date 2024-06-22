@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5e7869a2-eca1-4a9b-94a2-e875e8ac297d" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/ArrayList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/ArrayList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/BoardCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/BoardCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/BoardList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/BoardList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/ProjectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/ProjectCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/ProjectList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/ProjectList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/UserCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/UserCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/UserList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/command/UserList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/vo/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myapp/app/src/main/java/bitcamp/myapp/vo/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/BoardCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/BoardCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/BoardList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/BoardList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/ProjectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/ProjectCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/ProjectList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/ProjectList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/UserCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/UserCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/UserList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/command/UserList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/vo/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/com/remind/vo/Project.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2iEBckj4odBjxVZRU4QuIr9KYDh" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/NERO/git/bitcamp-mystudy/testHome"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="5e7869a2-eca1-4a9b-94a2-e875e8ac297d" name="변경" comment="" />
+      <created>1719045937496</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719045937496</updated>
+    </task>
+    <servers />
+  </component>
+</project>

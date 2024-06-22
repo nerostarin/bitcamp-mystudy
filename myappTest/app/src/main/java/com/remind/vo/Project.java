@@ -1,5 +1,7 @@
 package com.remind.vo;
 
+import com.remind.command.ArrayList;
+
 public class Project {
     private static int seqNo;
 
@@ -8,8 +10,7 @@ public class Project {
     private String description;
     private String startDate;
     private String endDate;
-    private User[] members = new User[10];
-    private int memberSize;
+    private ArrayList members = new ArrayList();
 
 
     public static int getNextSeqNo()
@@ -23,40 +24,6 @@ public class Project {
 
     public void setNo(int no) {
         this.no = no;
-    }
-    public boolean containMember(User user)
-    {
-        for(int i = 0; i < memberSize; i++)
-        {
-            User member = members[i];
-            if(member.getName().equals(user.getName()))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //회원 추가
-    public void addMember(User user) {
-        members[memberSize++] = user;
-    }
-
-    //회원 몇명있는지
-    public int countMembers() {
-        return this.memberSize;
-    }
-
-    //회원 가지고 오기
-    public User getMember(int index) {
-        return members[index];
-    }
-
-    public void deleteMember(int index) {
-        for (int i = index + 1; i < memberSize; i++) {
-            members[i - 1] = members[i];
-        }
-        members[--memberSize] = null;
     }
 
     public String getTitle() {
@@ -89,5 +56,10 @@ public class Project {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public ArrayList getMembers()
+    {
+        return members;
     }
 }
