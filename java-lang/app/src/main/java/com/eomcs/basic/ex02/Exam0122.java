@@ -19,7 +19,7 @@ public class Exam0122 {
     Member m1 = new Member("홍길동", 20);
     Member m2 = new Member("홍길동", 20);
 
-    // Member 인스턴스를 통해 호출하는 메서드는 모두 
+    // Member 인스턴스를 통해 호출하는 메서드는 모두
     // Object 클래스의 메서드이다.
     m1.toString();
     m1.hashCode();
@@ -34,7 +34,7 @@ public class Exam0122 {
     System.out.println(m1.equals(m2)); // false
 
     System.out.println(m1.toString());
-    System.out.println(m2.toString());
+    System.out.println(m2.hashCode());
 
   }
 }
