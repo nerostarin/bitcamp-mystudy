@@ -28,11 +28,11 @@ public class BoardCommand {
                 this.addBoard();
                 break;
 
-            case "조회":
+            case "목록":
                 this.viewBoard();
                 break;
 
-            case "목록":
+            case "조회":
                 this.listBoard();
                 break;
 
