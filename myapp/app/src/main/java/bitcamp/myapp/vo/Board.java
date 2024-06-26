@@ -1,5 +1,7 @@
 package bitcamp.myapp.vo;
 
+import java.util.Objects;
+
 public class Board {
 
     private static int seqNo;
@@ -10,9 +12,28 @@ public class Board {
     private String date;
     private int views;
 
+    public Board() {
+    }
+
+    public Board(int no) {
+        this.no = no;
+    }
 
     public static int getNextSeqNo() {
         return ++seqNo;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Board board = (Board) object;
+        return no == board.no;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(no);
     }
 
     public int getNo() {

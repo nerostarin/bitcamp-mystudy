@@ -1,42 +1,11 @@
-package bitcamp.myapp.command;
+package bitcamp.myapp.util;
 
-public class LinkedList {
-    Node first;
-    Node last;
-    int size;
+public class LinkedList extends AbstractList {
+    private Node first;
+    private Node last;
 
-    /*    public static void main(String[] args) {
-            LinkedList list = new LinkedList();
-            list.append("홍길동");
-            list.append("임꺽정");
-            list.append("유관순");
-            list.append("안중근");
-            list.append("윤봉길");
-            list.append("김구");
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-
-            list.delete(2);
-            list.printAll();
-        }
-    */
-    public Object delete(int index) {
+    @Override
+    public Object remove(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -71,13 +40,14 @@ public class LinkedList {
         return deletedNode;
     }
 
-    public int index(Object value) {
+    @Override
+    public int indexOf(Object value) {
 
         Node cursor = first;
         int currentIndex = 0;
 
         while (cursor != null) {
-            if (cursor.value == value) {
+            if (cursor.value.equals(value)) {
                 return currentIndex;
             }
             cursor = cursor.next;
@@ -86,7 +56,8 @@ public class LinkedList {
         return -1;
     }
 
-    public Object[] getArray() {
+    @Override
+    public Object[] toArray() {
         Object[] arr = new Object[size];
 
         Node cursor = first;
@@ -97,20 +68,8 @@ public class LinkedList {
         return arr;
     }
 
-    public int size() {
-        return size;
-    }
-
-    public void printAll() {
-        Node cursor = first;
-        while (cursor != null) {
-            System.out.print(cursor.value + ", ");
-            cursor = cursor.next;
-        }
-        System.out.println("");
-    }
-
-    public void append(Object value) {
+    @Override
+    public void add(Object value) {
         Node newNode = new Node(value);
 
         if (first == null) {
@@ -122,9 +81,10 @@ public class LinkedList {
         size++;
     }
 
-    public Object getValue(int index) {
+    @Override
+    public Object get(int index) {
         if (index < 0 || index >= size) {
-            throw null;
+            return null;
         }
 
         Node cursor = first;
@@ -138,5 +98,15 @@ public class LinkedList {
             currentIndex++;
         }
         return null;
+    }
+
+    //스태틱 중첩 클래스
+    private static class Node {
+        Object value;
+        Node next;
+
+        public Node(Object value) {
+            this.value = value;
+        }
     }
 }
