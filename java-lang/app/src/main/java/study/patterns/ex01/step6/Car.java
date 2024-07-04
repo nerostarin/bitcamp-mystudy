@@ -20,7 +20,4 @@ public abstract class Car {
   protected abstract void start();
   protected abstract void run();
   protected abstract void stop();
-
-
-
 }

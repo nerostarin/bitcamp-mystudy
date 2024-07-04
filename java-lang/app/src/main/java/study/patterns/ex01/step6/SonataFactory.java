@@ -1,4 +1,4 @@
-package study.patterns.ex01.step6;
+x`package study.patterns.ex01.step6;
 
 public class SonataFactory implements CarFactory{
 
