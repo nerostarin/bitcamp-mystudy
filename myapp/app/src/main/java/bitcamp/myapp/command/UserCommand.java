@@ -4,34 +4,38 @@ import bitcamp.myapp.util.LinkedList;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.User;
 
-public class UserCommand {
+public class UserCommand extends AbstractCommand {
 
-    private static int userNo = 0;
     LinkedList userList = new LinkedList();
+    private String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
 
-    public void executeUserCommand(String command) {
-        System.out.printf("[%s]\n", command);
-        switch (command) {
+    public UserCommand(String menuTitle) {
+        super(menuTitle);
+    }
+
+    protected void processMenu(String menuName) {
+        switch (menuName) {
             case "등록":
-                addUser();
+                this.addUser();
                 break;
-
             case "조회":
-                viewUser();
+                this.viewUser();
                 break;
-
             case "목록":
-                listUser();
+                this.listUser();
                 break;
-
             case "변경":
-                updateUser();
+                this.updateUser();
                 break;
-
             case "삭제":
-                deleteUser();
+                this.deleteUser();
                 break;
         }
+    }
+
+    @Override
+    protected String[] getMenus() {
+        return menus;
     }
 
     private void addUser() {
@@ -49,52 +53,50 @@ public class UserCommand {
         for (Object obj : userList.toArray()) {
             User user = (User) obj;
             System.out.printf("%d %s %s\n", user.getNo(), user.getName(), user.getEmail());
-            /*
-            이렇게도 되는데 실행오류가 난다?
-             for (Object user userList.toArray()) {
-            System.out.printf("%d %s %s\n", ((User)user).getNo(), user.getName(), user.getEmail());
-            }
-            * */
         }
     }
 
     private void viewUser() {
-        userNo = Prompt.inputInt("회원번호?");
+        int userNo = Prompt.inputInt("회원번호?");
         User user = (User) userList.get(userList.indexOf(new User(userNo)));
         if (user == null) {
             System.out.println("없는 회원입니다.");
             return;
         }
-        System.out.printf("이름: %s \n", user.getName());
-        System.out.printf("이메일: %s \n", user.getEmail());
-        System.out.printf("전화번호: %s \n", user.getTel());
+
+        System.out.printf("이름: %s\n", user.getName());
+        System.out.printf("이메일: %s\n", user.getEmail());
+        System.out.printf("연락처: %s\n", user.getTel());
     }
 
     private void updateUser() {
-        userNo = Prompt.inputInt("회원번호?");
+        int userNo = Prompt.inputInt("회원번호?");
         User user = (User) userList.get(userList.indexOf(new User(userNo)));
         if (user == null) {
             System.out.println("없는 회원입니다.");
             return;
         }
-        user.setName(Prompt.input("이름 (%s)?", user.getName()));
-        user.setEmail(Prompt.input("이메일 (%s)?", user.getEmail()));
+
+        user.setName(Prompt.input("이름(%s)?", user.getName()));
+        user.setEmail(Prompt.input("이메일(%s)?", user.getEmail()));
         user.setPassword(Prompt.input("암호?"));
-        user.setTel(Prompt.input("연락처 (%s)?", user.getTel()));
+        user.setTel(Prompt.input("연락처(%s)?", user.getTel()));
+        System.out.println("변경 했습니다.");
     }
 
     private void deleteUser() {
-        userNo = Prompt.inputInt("회원번호?");
+        int userNo = Prompt.inputInt("회원번호?");
         User deletedUser = (User) userList.get(userList.indexOf(new User(userNo)));
         if (deletedUser != null) {
             userList.remove(userList.indexOf(deletedUser));
-            System.out.printf("%s 삭제 했습니다\n", deletedUser.getName());
-            return;
+            System.out.printf("'%s' 회원을 삭제 했습니다.\n", deletedUser.getName());
+        } else {
+            System.out.println("없는 회원입니다.");
         }
-        System.out.println("없는 회원입니다.");
     }
 
     public LinkedList getUserList() {
         return userList;
     }
+
 }

@@ -1,17 +1,51 @@
 package bitcamp.myapp.util;
 
 public class LinkedList extends AbstractList {
+
     private Node first;
     private Node last;
+
+    @Override
+    public void add(Object value) {
+        Node newNode = new Node(value);
+
+        if (first == null) {
+            last = first = newNode;
+        } else {
+            last.next = newNode;
+            last = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public Object get(int index) {
+        if (index < 0 || index >= size) {
+            throw null;
+        }
+
+        Node cursor = first;
+        int currentIndex = 0;
+
+        while (cursor != null) {
+            if (currentIndex == index) {
+                return cursor.value;
+            }
+            cursor = cursor.next;
+            currentIndex++;
+        }
+        return null;
+    }
 
     @Override
     public Object remove(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
+
         Node deletedNode = null;
         size--;
-        // 삭제할 노드가 헤드인 경우
+
         if (index == 0) {
             deletedNode = first;
             first = first.next;
@@ -25,24 +59,25 @@ public class LinkedList extends AbstractList {
         int currentIndex = 0;
 
         while (cursor != null) {
-            if (currentIndex == index - 1) {
+            if (currentIndex == (index - 1)) {
                 break;
             }
             cursor = cursor.next;
             currentIndex++;
         }
+
         deletedNode = cursor.next;
         cursor.next = cursor.next.next;
 
         if (cursor.next == null) {
             last = cursor;
         }
-        return deletedNode;
+
+        return deletedNode.value;
     }
 
     @Override
     public int indexOf(Object value) {
-
         Node cursor = first;
         int currentIndex = 0;
 
@@ -65,48 +100,7 @@ public class LinkedList extends AbstractList {
             arr[i] = cursor.value;
             cursor = cursor.next;
         }
+
         return arr;
-    }
-
-    @Override
-    public void add(Object value) {
-        Node newNode = new Node(value);
-
-        if (first == null) {
-            last = first = newNode;
-        } else {
-            last.next = newNode;
-            last = newNode;
-        }
-        size++;
-    }
-
-    @Override
-    public Object get(int index) {
-        if (index < 0 || index >= size) {
-            return null;
-        }
-
-        Node cursor = first;
-        int currentIndex = 0;
-
-        while (cursor != null) {
-            if (currentIndex == index) {
-                return cursor.value;
-            }
-            cursor = cursor.next;
-            currentIndex++;
-        }
-        return null;
-    }
-
-    //스태틱 중첩 클래스
-    private static class Node {
-        Object value;
-        Node next;
-
-        public Node(Object value) {
-            this.value = value;
-        }
     }
 }

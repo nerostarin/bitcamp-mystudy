@@ -1,83 +1,89 @@
 package bitcamp.myapp.vo;
 
 import bitcamp.myapp.util.ArrayList;
-
 import java.util.Objects;
 
 public class Project {
-    private static int seqNo;
-    private int no;
-    private String title;
-    private String description;
-    private String startDate;
-    private String endDate;
-    private ArrayList members = new ArrayList();
 
-    public Project() {
-    }
+  private static int seqNo;
 
-    public Project(int no) {
-        this.no = no;
-    }
+  private int no;
+  private String title;
+  private String description;
+  private String startDate;
+  private String endDate;
+  private ArrayList members = new ArrayList();
 
-    public static int getNextSeqNo() {
-        return ++seqNo;
-    }
-    
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Project project = (Project) object;
-        return no == project.no;
-    }
+  public Project() {
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(no);
-    }
+  }
 
-    public int getNo() {
-        return no;
-    }
+  public Project(int no) {
+    this.no = no;
+  }
 
-    public void setNo(int no) {
-        this.no = no;
-    }
+  public static int getNextSeqNo() {
+    return ++seqNo;
+  }
 
-    public String getTitle() {
-        return title;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Project project = (Project) o;
+    return no == project.no;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(no);
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public int getNo() {
+    return no;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setNo(int no) {
+    this.no = no;
+  }
 
-    public String getStartDate() {
-        return startDate;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getEndDate() {
-        return endDate;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public ArrayList getMembers() {
-        return members;
-    }
+  public String getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
+
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
+
+  public ArrayList getMembers() {
+    return members;
+  }
 }

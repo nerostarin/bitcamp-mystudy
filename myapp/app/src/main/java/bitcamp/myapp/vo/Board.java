@@ -1,78 +1,84 @@
 package bitcamp.myapp.vo;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Board {
 
-    private static int seqNo;
+  private static int seqNo;
 
-    private int no;
-    private String name;
-    private String detail;
-    private String date;
-    private int views;
+  private int no;
+  private String title;
+  private String content;
+  private Date createdDate;
+  private int viewCount;
 
-    public Board() {
+  public Board() {
+
+  }
+
+  public Board(int no) {
+    this.no = no;
+  }
+
+  public static int getNextSeqNo() {
+    return ++seqNo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public Board(int no) {
-        this.no = no;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    Board board = (Board) o;
+    return no == board.no;
+  }
 
-    public static int getNextSeqNo() {
-        return ++seqNo;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(no);
+  }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Board board = (Board) object;
-        return no == board.no;
-    }
+  public int getNo() {
+    return no;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(no);
-    }
+  public void setNo(int no) {
+    this.no = no;
+  }
 
-    public int getNo() {
-        return no;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setNo(int no) {
-        this.no = no;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public String getDetail() {
-        return detail;
-    }
+  public Date getCreatedDate() {
+    return createdDate;
+  }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+  }
 
-    public String getDate() {
-        return date;
-    }
+  public int getViewCount() {
+    return viewCount;
+  }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
+  public void setViewCount(int viewCount) {
+    this.viewCount = viewCount;
+  }
 }

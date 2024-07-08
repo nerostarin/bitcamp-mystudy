@@ -3,18 +3,37 @@ package bitcamp.myapp.util;
 import java.util.Arrays;
 
 public class ArrayList extends AbstractList {
+
     private static final int MAX_SIZE = 3;
 
     private Object[] list = new Object[MAX_SIZE];
 
-    @Override
+
+    @Override // 재정의 또는 추상메서드 구현을 의미
     public void add(Object obj) {
-        //grow();//우리가 만든 증가 메서드
-        //자바에서 제공하는 배열증가 메서드
-        int oldSize = list.length;
-        int newSize = oldSize + (oldSize >> 1);
-        list = Arrays.copyOf(list, newSize);
+        if (size == list.length) {
+            // 1) 우리가 만든 메서드를 사용하여 배열 크기 증가
+            //grow();
+
+            // 2) 자바에서 제공하는 클래스를 사용하여 배열 크기 증가
+            int oldSize = list.length;
+            int newSize = oldSize + (oldSize >> 1);
+            list = Arrays.copyOf(list, newSize);
+        }
         list[size++] = obj;
+    }
+
+    private void grow() {
+        int oldSize = list.length;
+        int newSize = oldSize + (oldSize >> 1); // 50% 증가
+
+        Object[] arr = new Object[newSize]; // 새 배열을 만든다.
+
+        for (int i = 0; i < list.length; i++) { // 기존 배열의 값을 복사해온다.
+            arr[i] = list[i];
+        }
+
+        list = arr; // 기존 배열의 주소를 버리고 새 배열의 주소를 담는다.
     }
 
     @Override
@@ -33,7 +52,7 @@ public class ArrayList extends AbstractList {
     @Override
     public Object[] toArray() {
         Object[] arr = new Object[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < arr.length; i++) {
             arr[i] = list[i];
         }
         return arr;
@@ -54,6 +73,7 @@ public class ArrayList extends AbstractList {
         if (index < 0 || index >= size) {
             return null;
         }
+        java.util.ArrayList l;
         return list[index];
     }
 
@@ -61,16 +81,4 @@ public class ArrayList extends AbstractList {
         return indexOf(obj) != -1;
     }
 
-    private void grow() {
-        if (size == list.length) {
-            int oldSize = list.length;
-            int newSize = oldSize + (oldSize >> 2);// 기존배열에 50%증가
-            Object[] arr = new Object[newSize];
-            for (int i = 0; i < list.length; i++) {
-                arr[i] = list[i];
-            }
-            list = arr; //기존 주소를 버리고 새주소로 배열을변경
-            System.out.println("배열의 크기가 증가되었습니다");
-        }
-    }
 }
