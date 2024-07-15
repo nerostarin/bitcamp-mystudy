@@ -3,13 +3,11 @@ package bitcamp.myapp.command;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.User;
 
-import java.util.Iterator;
 import java.util.List;
-
 
 public class UserCommand extends AbstractCommand {
 
-    private List userList;
+    private List<User> userList;
     private String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
 
     public UserCommand(String menuTitle, List list) {
@@ -17,7 +15,14 @@ public class UserCommand extends AbstractCommand {
         this.userList = list;
     }
 
+    @Override
+    protected String[] getMenus() {
+        return menus;
+    }
+
+    @Override
     protected void processMenu(String menuName) {
+        System.out.printf("[%s]\n", menuName);
         switch (menuName) {
             case "등록":
                 this.addUser();
@@ -37,11 +42,6 @@ public class UserCommand extends AbstractCommand {
         }
     }
 
-    @Override
-    protected String[] getMenus() {
-        return menus;
-    }
-
     private void addUser() {
         User user = new User();
         user.setName(Prompt.input("이름?"));
@@ -54,9 +54,7 @@ public class UserCommand extends AbstractCommand {
 
     private void listUser() {
         System.out.println("번호 이름 이메일");
-        Iterator iterator = userList.iterator();
-        while (iterator.hasNext()) {
-            User user = (User) iterator.next();
+        for (User user : userList) {
             System.out.printf("%d %s %s\n", user.getNo(), user.getName(), user.getEmail());
         }
     }
@@ -68,7 +66,8 @@ public class UserCommand extends AbstractCommand {
             System.out.println("없는 회원입니다.");
             return;
         }
-        User user = (User) userList.get(index);
+
+        User user = userList.get(index);
 
         System.out.printf("이름: %s\n", user.getName());
         System.out.printf("이메일: %s\n", user.getEmail());
@@ -82,7 +81,8 @@ public class UserCommand extends AbstractCommand {
             System.out.println("없는 회원입니다.");
             return;
         }
-        User user = (User) userList.get(index);
+
+        User user = userList.get(index);
 
         user.setName(Prompt.input("이름(%s)?", user.getName()));
         user.setEmail(Prompt.input("이메일(%s)?", user.getEmail()));
@@ -98,8 +98,8 @@ public class UserCommand extends AbstractCommand {
             System.out.println("없는 회원입니다.");
             return;
         }
-        User deletedUser = (User) userList.remove(index);
-        System.out.printf("'%s' 회원을 삭제 했습니다.\n", deletedUser.getName());
 
+        User deletedUser = userList.remove(index);
+        System.out.printf("'%s' 회원을 삭제 했습니다.\n", deletedUser.getName());
     }
 }

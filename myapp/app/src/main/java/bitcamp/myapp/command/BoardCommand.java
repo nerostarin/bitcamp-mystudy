@@ -4,14 +4,14 @@ import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class BoardCommand extends AbstractCommand {
-    private List boardList;
-    private String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
 
-    public BoardCommand(String menuTitle, List list) {
+    private List<Board> boardList;
+    private String[] menus = {"등록", "목록", "조회", "변경", "삭제", "검색"};
+
+    public BoardCommand(String menuTitle, List<Board> list) {
         super(menuTitle);
         this.boardList = list;
     }
@@ -23,6 +23,7 @@ public class BoardCommand extends AbstractCommand {
 
     @Override
     protected void processMenu(String menuName) {
+        System.out.printf("[%s]\n", menuName);
         switch (menuName) {
             case "등록":
                 this.addBoard();
@@ -47,10 +48,11 @@ public class BoardCommand extends AbstractCommand {
         int index = boardList.indexOf(new Board(boardNo));
         if (index == -1) {
             System.out.println("없는 게시글입니다.");
+            return;
         }
-        Board deletedBoard = (Board) boardList.remove(index);
-        System.out.printf("%d번 게시글을 삭제 했습니다.\n", deletedBoard.getNo());
 
+        Board deletedBoard = boardList.remove(index);
+        System.out.printf("%d번 게시글을 삭제 했습니다.\n", deletedBoard.getNo());
     }
 
     private void updateBoard() {
@@ -58,8 +60,11 @@ public class BoardCommand extends AbstractCommand {
         int index = boardList.indexOf(new Board(boardNo));
         if (index == -1) {
             System.out.println("없는 게시글입니다.");
+            return;
         }
-        Board board = (Board) boardList.get(index);
+
+        Board board = boardList.get(index);
+
         board.setViewCount(board.getViewCount() + 1);
         board.setTitle(Prompt.input("제목(%s)?", board.getTitle()));
         board.setContent(Prompt.input("내용(%s)?", board.getContent()));
@@ -71,9 +76,11 @@ public class BoardCommand extends AbstractCommand {
         int index = boardList.indexOf(new Board(boardNo));
         if (index == -1) {
             System.out.println("없는 게시글입니다.");
+            return;
         }
-        Board board = (Board) boardList.get(index);
-        
+
+        Board board = boardList.get(index);
+
         board.setViewCount(board.getViewCount() + 1);
         System.out.printf("제목: %s\n", board.getTitle());
         System.out.printf("내용: %s\n", board.getContent());
@@ -83,9 +90,7 @@ public class BoardCommand extends AbstractCommand {
 
     private void listBoard() {
         System.out.println("번호 제목 작성일 조회수");
-        Iterator iterator = boardList.iterator();
-        while (iterator.hasNext()) {
-            Board board = (Board) iterator.next();
+        for (Board board : boardList) {
             System.out.printf("%d %s %tY-%3$tm-%3$td %d\n",
                     board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
