@@ -9,7 +9,7 @@ import java.util.List;
 public class UserViewCommand implements Command {
     private List<User> userList;
 
-    public UserViewCommand(List list) {
+    public UserViewCommand(List<User> list) {
         this.userList = list;
     }
 

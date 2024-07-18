@@ -40,7 +40,7 @@ public class Exam0530 {
     Calculator1 c1 = MyCalculator::plus; // OK!
     // 위의 코드는 다음의 람다 코드로 변환된다.
     // => Calculator1 c1 = (int x, int y) -> {return MyCalculator.plus(x, y);};
-    // 
+    //
     // 위 람다 문장은 다음 문장과 같다.
     //    Calculator1 c1 = new Calculator1() {
     //      @Override
@@ -100,7 +100,7 @@ public class Exam0530 {
     // 리턴 타입 int ===> String
     //    Calculator6 c6 = MyCalculator::plus; // 컴파일 오류!
     //    // => Calculator6 c6 = (int x, int y) -> {return MyCalculator.plus(x, y);};
-    // 
+    //
     // 위 문장은 다음과 같다.
     //    Calculator6 c6 = new Calculator6() {
     //      @Override
@@ -110,16 +110,16 @@ public class Exam0530 {
     //    };
 
 
-    // => 메서드 레퍼런스를 지정할 때 리턴 타입의 규칙:
-    // 1) 같은 리턴 타입
-    // 2) 암시적 형변환 가능한 타입
-    // 3) auto-boxing 가능한 타입
-    // 4) void
-    // 결론,
-    // 메서드 레퍼런스가 가리키는 실제 메서드를 호출한 후
-    // 그 메서드가 리턴한 값이
-    // 인터페이스에 정의된 메서드의 리턴 값으로 사용할 수 있다면
-    // 문제가 없다.
+    //     => 메서드 레퍼런스를 지정할 때 리턴 타입의 규칙:
+    //     1) 같은 리턴 타입
+    //     2) 암시적 형변환 가능한 타입
+    //     3) auto-boxing 가능한 타입
+    //     4) void
+    //     결론,
+    //     메서드 레퍼런스가 가리키는 실제 메서드를 호출한 후
+    //     그 메서드가 리턴한 값이
+    //     인터페이스에 정의된 메서드의 리턴 값으로 사용할 수 있다면
+    //     문제가 없다.
     //
   }
 }

@@ -10,7 +10,7 @@ public class ProjectUpdateCommand implements Command {
     private List<Project> projectList;
     private ProjectMemberHandler memberHandler;
 
-    public ProjectUpdateCommand(List projectList, ProjectMemberHandler memberHandler) {
+    public ProjectUpdateCommand(List<Project> projectList, ProjectMemberHandler memberHandler) {
         this.projectList = projectList;
         this.memberHandler = memberHandler;
     }

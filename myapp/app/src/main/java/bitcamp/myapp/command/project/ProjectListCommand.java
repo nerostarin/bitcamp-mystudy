@@ -8,7 +8,7 @@ import java.util.List;
 public class ProjectListCommand implements Command {
     private List<Project> projectList;
 
-    public ProjectListCommand(List projectList) {
+    public ProjectListCommand(List<Project> projectList) {
         this.projectList = projectList;
     }
 

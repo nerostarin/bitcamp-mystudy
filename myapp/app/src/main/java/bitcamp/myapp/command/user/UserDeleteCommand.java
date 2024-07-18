@@ -9,7 +9,7 @@ import java.util.List;
 public class UserDeleteCommand implements Command {
     private List<User> userList;
 
-    public UserDeleteCommand(List list) {
+    public UserDeleteCommand(List<User> list) {
         this.userList = list;
     }
 

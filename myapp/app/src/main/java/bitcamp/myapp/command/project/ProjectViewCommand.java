@@ -11,7 +11,7 @@ public class ProjectViewCommand implements Command {
     private List<Project> projectList;
     private List<User> userList;
 
-    public ProjectViewCommand(List projectList, List userList) {
+    public ProjectViewCommand(List<Project> projectList, List<User> userList) {
         this.projectList = projectList;
         this.userList = userList;
     }

@@ -10,7 +10,7 @@ public class UserAddCommand implements Command {
 
     private List<User> userList;
 
-    public UserAddCommand(List list) {
+    public UserAddCommand(List<User> list) {
         this.userList = list;
     }
 

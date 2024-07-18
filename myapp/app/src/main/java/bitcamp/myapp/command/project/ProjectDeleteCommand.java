@@ -9,7 +9,7 @@ import java.util.List;
 public class ProjectDeleteCommand implements Command {
     private List<Project> projectList;
 
-    public ProjectDeleteCommand(List projectList) {
+    public ProjectDeleteCommand(List<Project> projectList) {
         this.projectList = projectList;
     }
 

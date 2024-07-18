@@ -9,7 +9,7 @@ import java.util.List;
 public class UserUpdateCommand implements Command {
     private List<User> userList;
 
-    public UserUpdateCommand(List list) {
+    public UserUpdateCommand(List<User> list) {
         this.userList = list;
     }
 

@@ -8,10 +8,10 @@ import java.util.List;
 public class UserListCommand implements Command {
     private List<User> userList;
 
-    public UserListCommand(List list) {
+    public UserListCommand(List<User> list) {
         this.userList = list;
     }
-    
+
     @Override
     public void execute(String menuName) {
         System.out.println("번호 이름 이메일");
