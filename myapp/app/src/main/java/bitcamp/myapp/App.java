@@ -12,25 +12,24 @@ import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class App {
 
     MenuGroup mainMenu = new MenuGroup("메인");
 
-    HelpCommand helpCommand;
-    HistoryCommand historyCommand;
     List<User> userList = new ArrayList<>();
     List<Project> projectList = new LinkedList<>();
     List<Board> boardList = new LinkedList<>();
 
     public App() {
-
+        loadData();
         MenuGroup userMenu = new MenuGroup("회원");
         userMenu.add(new MenuItem("등록", new UserAddCommand(userList)));
         userMenu.add(new MenuItem("목록", new UserListCommand(userList)));
@@ -68,7 +67,6 @@ public class App {
 
     void execute() {
         try {
-            loadData();
             mainMenu.execute();
         } catch (Exception ex) {
             System.out.println("오류가 발생하였습니다.");
@@ -88,73 +86,74 @@ public class App {
     }
 
     private void loadUsers() {
-        try (FileInputStream in = new FileInputStream("user.data")) {
-            int userLength = (in.read() << 8) | in.read();
+        try (Scanner in = new Scanner(new FileReader("user.csv"))) {
+            while (true) {
+                try {
+                    String csv = in.nextLine();
+                    userList.add(User.valueOf(csv));
+                } catch (Exception e) {
+                    break;
+                }
+            }
 
             int maxUserNo = 0;
-            for (int i = 0; i < userLength; i++) {
-                //한개의 user 데이터 바이트 배열 크기 파일에서 2바이트를 읽는다
-                int len = (in.read() << 8 | in.read());
-                //한개의 user 데이트 바이트 배열 위에서 지정한 개 수 만큼  바이트 배열을 읽는다
-                byte[] bytes = new byte[len];
-                in.read(bytes);
-
-                //User 바이트 배열을 가지고 유저 객체를 생성
-                User user = User.valueOf(bytes);
-                userList.add(user);
-
+            for (User user : userList) {
                 if (user.getNo() > maxUserNo) {
                     maxUserNo = user.getNo();
                 }
-
                 User.initSeqNo(maxUserNo);
             }
-        } catch (IOException e) {
+        } catch (IOException e) {//캐치에서 만 쓸수 있는 문법이다
             System.out.println("회원정보 로딩중 오류 발생");
+            //e.printStackTrace();
         }
     }
 
     private void loadProjects() {
-        try (FileInputStream in = new FileInputStream("project.data")) {
-            int projectLength = (in.read() << 8) | in.read();
-
+        try (Scanner in = new Scanner(new FileReader("project.csv"))) {
+            while (true) {
+                try {
+                    String csv = in.nextLine();
+                    projectList.add(Project.valueOf(csv));
+                } catch (Exception e) {
+                    break;
+                }
+            }
             int maxUserNo = 0;
-            for (int i = 0; i < projectLength; i++) {
-                int len = (in.read() << 8 | in.read());
-                byte[] bytes = new byte[len];
-                in.read(bytes);
-
-                Project project = Project.valueOf(bytes);
-                projectList.add(project);
-
+            for (Project project : projectList) {
                 if (project.getNo() > maxUserNo) {
                     maxUserNo = project.getNo();
                 }
-
                 User.initSeqNo(maxUserNo);
             }
         } catch (IOException e) {
-            System.out.println("회원정보 로딩중 오류 발생");
+            System.out.println("프로젝트정보 로딩중 오류 발생");
+            projectList = new LinkedList<>();
+            //e.printStackTrace();
         }
     }
 
     private void loadBoards() {
-        try (FileInputStream in = new FileInputStream("board.data")) {
-            int boardLength = (in.read() << 8) | in.read();
+        try (Scanner in = new Scanner(new FileReader("board.csv"))) {
+            while (true) {
+                try {
+                    String csv = in.nextLine();
+                    boardList.add(Board.valueOf(csv));
+                } catch (Exception e) {
+                    break;
+                }
+            }
+
             int maxBoardNo = 0;
-            for (int i = 0; i < boardLength; i++) {
-                int len = (in.read() << 8) | in.read();
-                byte[] bytes = new byte[len];
-                in.read(bytes);
-                Board board = Board.valueOf(bytes);
-                boardList.add(board);
+            for (Board board : boardList) {
                 if (board.getNo() > maxBoardNo) {
                     maxBoardNo = board.getNo();
                 }
             }
             Board.initSeqNo(maxBoardNo);
         } catch (IOException e) {
-            System.out.println("게시물 정보 로딩 중 오류 발생");
+            System.out.println("게시물 정보 로딩중 오류 발생");
+            //e.printStackTrace();
         }
     }
 
@@ -166,50 +165,35 @@ public class App {
     }
 
     private void saveUsers() {
-        try (FileOutputStream out = new FileOutputStream("user.data");) {
-            //몇개의 데이터를 읽을 지 알려주기 위해 저장 데이터의 개수를 출력한다
-            out.write(userList.size() >> 8);
-            out.write(userList.size());
+        try (FileWriter out = new FileWriter("user.csv")) {
             for (User user : userList) {
-                byte[] bytes = user.getBytes();
-                //USer 데이터의 바이트 배열의 크기를 출력
-                //그 이유는 읽을 때 한개 분량의 User바이트 배열을 읽기 위해
-                out.write(bytes.length >> 8);
-                out.write(bytes.length);
-                out.write(bytes);
+                out.write(user.toCsvString() + "\n");
             }
         } catch (IOException e) {
             System.out.println("회원정보 저장중 오류 발생");
+            e.printStackTrace();
         }
     }
 
     private void saveProjects() {
-        try (FileOutputStream out = new FileOutputStream("board.data")) {
-            out.write(boardList.size() >> 8);
-            out.write(boardList.size());
+        try (FileWriter out = new FileWriter("project.csv")) {
             for (Project project : projectList) {
-                byte[] bytes = project.getBytes();
-                out.write(bytes.length >> 8);
-                out.write(bytes.length);
-                out.write(bytes);
+                out.write(project.toCsvString() + "\n");
             }
         } catch (IOException e) {
             System.out.println("게시물 정보 저장 중 오류 발생");
+            e.printStackTrace();
         }
     }
 
     private void saveBoards() {
-        try (FileOutputStream out = new FileOutputStream("board.data")) {
-            out.write(boardList.size() >> 8);
-            out.write(boardList.size());
+        try (FileWriter out = new FileWriter("board.csv")) {
             for (Board board : boardList) {
-                byte[] bytes = board.getBytes();
-                out.write(bytes.length >> 8);
-                out.write(bytes.length);
-                out.write(bytes);
+                out.write(board.toCsvString() + "\n");
             }
         } catch (IOException e) {
             System.out.println("게시물 정보 저장 중 오류 발생");
+            e.printStackTrace();
         }
     }
 }
