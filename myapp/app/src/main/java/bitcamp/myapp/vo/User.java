@@ -5,7 +5,7 @@ import java.util.Objects;
 
 // 시리얼라이저블 인터페이스 
 //직렬화를 승인한다는 표시로 사용한다
-public class User implements Serializable {
+public class User implements Serializable, SequenceNo {
 
     private static int seqNo;
 
@@ -68,6 +68,7 @@ public class User implements Serializable {
         return Objects.hashCode(no);
     }
 
+    @Override
     public int getNo() {
         return no;
     }
