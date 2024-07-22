@@ -97,8 +97,8 @@ public class App {
             if (seqObj.getNo() > maxSeqNo) {
                 maxSeqNo = seqObj.getNo();
             }
-            Method method = elementType.getMethod("initSeqNo", int.class);
-            method.invoke(null, maxSeqNo);
+            Method method = elementType.getMethod("initSeqNo", int.class); //initSeqNo라는 메소드에 파라미터값을 int로 받는 아이를 찾는다
+            method.invoke(null, maxSeqNo);//찾았으면 실행을하는데 static이어서 앞에 널을 넣어주고 인스턴스면 해당 객체를 넣어준다 User나 이런거
         }
     }
 
