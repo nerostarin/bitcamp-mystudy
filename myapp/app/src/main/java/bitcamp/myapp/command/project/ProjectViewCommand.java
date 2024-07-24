@@ -31,7 +31,7 @@ public class ProjectViewCommand implements Command {
         System.out.printf("설명: %s\n", project.getDescription());
         System.out.printf("기간: %s ~ %s\n", project.getStartDate(), project.getEndDate());
         System.out.println("팀원:");
-        for (User user : userList) {
+        for (User user : project.getMembers()) {
             System.out.printf("- %s\n", user.getName());
         }
     }

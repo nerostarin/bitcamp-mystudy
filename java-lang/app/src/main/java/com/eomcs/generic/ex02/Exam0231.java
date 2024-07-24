@@ -1,4 +1,4 @@
-// 제네릭(Generic) 문법 정리 - 제네릭 객체의 메서드 사용 
+// 제네릭(Generic) 문법 정리 - 제네릭 객체의 메서드 사용
 package com.eomcs.generic.ex02;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Exam0231 {
 
     ArrayList<B1> list1 = new ArrayList<>();
 
-    // ArrayList의 항목 타입을 B1으로 지정했기 때문에  
+    // ArrayList의 항목 타입을 B1으로 지정했기 때문에
     // ArrayList의 메서드 파라미터나 리턴 타입은 B1으로 설정된다.
 
     // => add(B1)
