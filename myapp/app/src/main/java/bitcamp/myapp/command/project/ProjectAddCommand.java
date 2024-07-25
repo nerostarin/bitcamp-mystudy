@@ -1,18 +1,18 @@
 package bitcamp.myapp.command.project;
 
 import bitcamp.myapp.command.Command;
+import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 import bitcamp.util.Prompt;
 
-import java.util.List;
-
 public class ProjectAddCommand implements Command {
 
-    private List<Project> projectList;
+    private ProjectDao projectDao;
     private ProjectMemberHandler memberHandler;
 
-    public ProjectAddCommand(List<Project> projectList, ProjectMemberHandler memberHandler) {
-        this.projectList = projectList;
+
+    public ProjectAddCommand(ProjectDao projectDao, ProjectMemberHandler memberHandler) {
+        this.projectDao = projectDao;
         this.memberHandler = memberHandler;
     }
 
@@ -29,7 +29,11 @@ public class ProjectAddCommand implements Command {
 
         project.setNo(Project.getNextSeqNo());
 
-        projectList.add(project);
+        try {
+            projectDao.insert(project);
+        } catch (Exception e) {
+            System.out.println("회원 등록중 오류 발생");
+        }
 
         System.out.println("등록했습니다.");
     }

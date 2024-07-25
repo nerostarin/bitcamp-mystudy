@@ -5,10 +5,9 @@ import java.util.Objects;
 
 // 시리얼라이저블 인터페이스 
 //직렬화를 승인한다는 표시로 사용한다
-public class User implements Serializable, SequenceNo {
+public class User implements Serializable {
 
-    private static int seqNo;
-
+    private static final long serialVersionUID = 1L;
     private int no;
     private String name;
     private String email;
@@ -22,34 +21,6 @@ public class User implements Serializable, SequenceNo {
         this.no = no;
     }
 
-    public static int getNextSeqNo() {
-        return ++seqNo;
-    }
-
-    public static void initSeqNo(int no) {
-        seqNo = no;
-    }
-
-    public static User valueOf(String csv) {
-        String[] values = csv.split(",");
-        User user = new User();
-        user.setNo(Integer.valueOf(values[0]));
-        user.setName(values[1]);
-        user.setEmail(values[2]);
-        user.setPassword(values[3]);
-        user.setTel(values[4]);
-
-        return user;
-    }
-
-    public String toCsvString() {
-        return new StringBuilder()
-                .append(no).append(",")
-                .append(name).append(",")
-                .append(email).append(",").
-                append(password).append(",").
-                append(tel).toString();
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,8 +38,7 @@ public class User implements Serializable, SequenceNo {
     public int hashCode() {
         return Objects.hashCode(no);
     }
-
-    @Override
+    
     public int getNo() {
         return no;
     }
