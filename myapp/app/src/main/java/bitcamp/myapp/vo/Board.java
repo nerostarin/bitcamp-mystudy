@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Board implements Serializable, SequenceNo {
+public class Board implements Serializable {
 
     private static int seqNo;
 
@@ -73,7 +73,7 @@ public class Board implements Serializable, SequenceNo {
         return Objects.hashCode(no);
     }
 
-    @Override
+
     public int getNo() {
         return no;
     }
