@@ -1,11 +1,11 @@
 package bitcamp.myapp.vo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-// 메모리 설계도
-public class User {
+public class User implements Serializable {
 
-  private static int seqNo;
+  private static final long serialVersionUID = 1L;
 
   private int no;
   private String name;
@@ -20,8 +20,15 @@ public class User {
     this.no = no;
   }
 
-  public static int getNextSeqNo() {
-    return ++seqNo;
+  @Override
+  public String toString() {
+    return "User{" +
+        "no=" + no +
+        ", name='" + name + '\'' +
+        ", email='" + email + '\'' +
+        ", password='" + password + '\'' +
+        ", tel='" + tel + '\'' +
+        '}';
   }
 
   @Override

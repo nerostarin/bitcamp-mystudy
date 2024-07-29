@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ce8ba307-3876-434a-9647-425ed5f2688a" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/AbstractCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/BoardCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/HelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/HistoryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/HistoryCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/ProjectCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/command/UserCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/AbstractList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/ArrayList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/Iterator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/LinkedList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/List.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/Prompt.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/Queue.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/util/Stack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../myappTest/app/src/main/java/bitcamp/myapp/vo/User.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2jm5ScmdeVMtxBX0ExCmZYPZvtE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/NERO/git/bitcamp-mystudy/myapp"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="ce8ba307-3876-434a-9647-425ed5f2688a" name="변경" comment="" />
+      <created>1721979412720</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1721979412720</updated>
+    </task>
+    <servers />
+  </component>
+</project>

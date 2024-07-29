@@ -1,12 +1,12 @@
-# 23. 특정 클래스에서만 사용되는 의존 객체는 중첩 클래스로 정의하기
+# 35. 데이터 접근 로직을 캡슐화하기 : DAO 객체 도입
 
 ## 학습목표
 
-- 중첩 클래스의 구동 원리를 이해하고 사용할 수 있다.
+- DAO 객체의 역할을 이해하고 프로젝트에 적용할 수 있다.
 
 ## 요구사항
 
-- 특정 클래스에서만 사용되는 클래스가 있다면 중첩 클래스로 코드를 정리하기
+- XxxCommand 객체에서 데이터 접근 로직을 별도의 클래스로 캡슐화 하라.
 
 ## 실행 결과
 
@@ -14,29 +14,40 @@
 
 ## 작업
 
-### Node 클래스를 중첩 클래스로 전환
-
-- LinkedList 클래스 변경
-  - Node 클래스를 LinkedList의 static nested class 로 옮긴다.
+- User 데이터 접근 로직을 캡슐화 하기
+  - UserDao 인터페이스 정의
+  - MapUserDao 구현체 추가
+  - ListUserDao 구현체 추가
+- Board 데이터 접근 로직을 캡슐화 하기
+  - BoardDao 인터페이스 정의
+  - MapBoardDao 구현체 추가
+  - ListBoardDao 구현체 추가
+- Project 데이터 접근 로직을 캡슐화 하기
+  - ProjectDao 인터페이스 정의
+  - MapProjetDao 구현체 추가
+  - ListProjectDao 구현체 추가
+- XxxCommand 클래스 변경
+  - DAO를 사용하여 데이터 처리
+- SequenceNo 인터페이스 삭제
+  - 도메인 클래스 변경
+- App 클래스 변경
+  - DAO 생성 및 Command 객체에 주입
+  - DAO의 데이터를 저장
   
-### ListIterator 클래스를 중첩 클래스로 전환
-
-- AbstractList 클래스 변경
-  - ListIterator 클래스를 이 클래스의 static nested class로 옮긴다.
-    - AbstractList01 클래스 참고
-  - ListIterator 클래스를 non-static nested class로 변경한다.
-    - AbstractList02 클래스 참고
-  - ListIterator 클래스를 local class로 변경한다.
-    - AbstractList03 클래스 참고
-  - ListIterator 클래스를 anonymous class로 변경한다.
-    - AbstractList 클래스 참고
-    
 ## 소스 파일
 
-- Node.java (삭제)
-- LinkedList.java
-- ListIterator.java(삭제)
-- AbstractList.java
-  - AbstractList01.java
-  - AbstractList02.java
-  - AbstractList03.java
+- App.java
+- BoardXxxCommand.java 
+- ProjectXxxCommand.java
+- UserXxxCommand.java
+- ProjectMemberHandler.java
+- BoardDao.java
+- MapBoardDao.java
+- ListBoardDao.java
+- UserDao.java
+- MapUserDao.java
+- ListUserDao.java
+- ProjectDao.java
+- MapProjectDao.java
+- ListProjectDao.java
+- SequenceNo.java (삭제)
