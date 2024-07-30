@@ -6,7 +6,8 @@ import java.util.Objects;
 
 public class Board implements Serializable {
 
-    private static int seqNo;
+
+    private static final long serialVersionUID = 1L;
 
     private int no;
     private String title;
@@ -20,40 +21,6 @@ public class Board implements Serializable {
 
     public Board(int no) {
         this.no = no;
-    }
-
-    public static int getNextSeqNo() {
-        return ++seqNo;
-    }
-
-
-    public static void initSeqNo(int no) {
-        seqNo = no;
-    }
-
-    public static int getSeqNo() {
-        return seqNo;
-    }
-
-    public static Board valueOf(String csv) {
-        String[] values = csv.split(",");
-        Board board = new Board();
-        board.setNo(Integer.valueOf(values[0]));
-        board.setTitle(values[1]);
-        board.setContent(values[2]);
-        board.setCreatedDate(new Date(values[3]));
-        board.setViewCount(Integer.parseInt(values[4]));
-
-        return board;
-    }
-
-    public String toCsvString() {
-        return new StringBuilder()
-                .append(no).append(",")
-                .append(title).append(",")
-                .append(content).append(",").
-                append(createdDate).append(",").
-                append(viewCount).toString();
     }
 
     @Override

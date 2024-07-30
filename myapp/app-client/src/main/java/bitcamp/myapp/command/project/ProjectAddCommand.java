@@ -28,8 +28,6 @@ public class ProjectAddCommand implements Command {
             System.out.println("팀원:");
             memberHandler.addMembers(project);
 
-            project.setNo(Project.getNextSeqNo());
-
             projectDao.insert(project);
         } catch (Exception e) {
             System.out.println("회원 등록중 오류 발생");

@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class Project implements Serializable {
 
-    private static int seqNo;
+
+    private static final long serialVersionUID = 1L;
 
     private int no;
     private String title;
@@ -27,18 +28,6 @@ public class Project implements Serializable {
         this.no = no;
     }
 
-    public static int getNextSeqNo() {
-        return ++seqNo;
-    }
-
-    public static void initSeqNo(int no) {
-        seqNo = no;
-    }
-
-    public static int getSeqNo() {
-        return seqNo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -56,7 +45,7 @@ public class Project implements Serializable {
         return Objects.hashCode(no);
     }
 
-    
+
     public int getNo() {
         return no;
     }
