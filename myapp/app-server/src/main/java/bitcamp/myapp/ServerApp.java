@@ -19,6 +19,7 @@ import java.util.List;
 public class ServerApp {
     List<ApplicationListener> listeners = new ArrayList<>();
     ApplicationContext appCtx = new ApplicationContext();
+
     UserDaoSkel userDaoSkel;
     BoardDaoSkel boardDaoSkel;
     ProjectDaoSkel projectDaoSkel;
@@ -51,8 +52,7 @@ public class ServerApp {
         userDaoSkel = (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
         boardDaoSkel = (BoardDaoSkel) appCtx.getAttribute("boardDaoSkel");
         projectDaoSkel = (ProjectDaoSkel) appCtx.getAttribute("projectDaoSkel");
-
-
+        
         System.out.println("서버 프로젝트 관리 시스템 시작");
 
         try (ServerSocket serverSocket = new ServerSocket(8888)) {
@@ -60,7 +60,13 @@ public class ServerApp {
 
             while (true) {
                 //클라이언트가 대기열에 오는 순간 대기열을 기다리린다는 코드
-                processRequest(serverSocket.accept());
+                Socket socket = serverSocket.accept();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        processRequest(socket);
+                    }
+                }.start();
             }
 
         } catch (Exception e) {
@@ -82,11 +88,11 @@ public class ServerApp {
         }
     }
 
-    void processRequest(Socket s) throws Exception {
+    void processRequest(Socket socket) {
         String remoteHost = null;
         int port = 0;
 
-        try (Socket socket = s) {
+        try (Socket s = socket) {
 
             InetSocketAddress addr = (InetSocketAddress) s.getRemoteSocketAddress();//클라이언트의 소켓 주소 리턴해주는 아이
             remoteHost = addr.getHostString();
