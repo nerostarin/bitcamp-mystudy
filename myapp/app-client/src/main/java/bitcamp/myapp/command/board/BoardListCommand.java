@@ -20,6 +20,7 @@ public class BoardListCommand implements Command {
             }
         } catch (Exception e) {
             System.out.println("게시물 목록 출력중 오류 발생");
+            e.printStackTrace();
         }
     }
 }

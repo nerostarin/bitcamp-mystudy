@@ -52,7 +52,7 @@ public class ServerApp {
         userDaoSkel = (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
         boardDaoSkel = (BoardDaoSkel) appCtx.getAttribute("boardDaoSkel");
         projectDaoSkel = (ProjectDaoSkel) appCtx.getAttribute("projectDaoSkel");
-        
+
         System.out.println("서버 프로젝트 관리 시스템 시작");
 
         try (ServerSocket serverSocket = new ServerSocket(8888)) {
@@ -61,12 +61,22 @@ public class ServerApp {
             while (true) {
                 //클라이언트가 대기열에 오는 순간 대기열을 기다리린다는 코드
                 Socket socket = serverSocket.accept();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        processRequest(socket);
-                    }
-                }.start();
+//                new Thread() {
+//                    @Override
+//                    public void run() {
+//                        processRequest(socket);
+//                    }
+//                }.start();
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        processRequest(socket);
+//
+//                    }
+//                }).start();
+
+                new Thread(() -> processRequest(socket)).start();
             }
 
         } catch (Exception e) {

@@ -29,15 +29,17 @@ public class ClientApp {
 
     void execute() {
         try {
-
-            appCtx.setAttribute("host", Prompt.input("서버 주소? "));
-            appCtx.setAttribute("port", Prompt.inputInt("포트 번호? "));
+            //"jdbc:mysql://localhost/studydb"
+            appCtx.setAttribute("url", "jdbc:mysql://localhost/studydb"/*Prompt.input("DBMS URL?")*/);
+            appCtx.setAttribute("username", "study"/*Prompt.input("아이디?")*/);
+            appCtx.setAttribute("password", "1111"/*Prompt.input("암호?")*/);
 
             for (ApplicationListener listener : listeners) {
                 try {
                     listener.onStart(appCtx);
                 } catch (Exception e) {
                     System.out.println("리스너 실행 중 오류 발생");
+                    e.printStackTrace();
                 }
             }
             System.out.println("[프로젝트 관리 시스템]");
