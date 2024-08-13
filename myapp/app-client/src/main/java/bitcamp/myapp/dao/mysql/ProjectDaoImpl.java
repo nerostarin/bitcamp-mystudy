@@ -7,14 +7,11 @@ import bitcamp.myapp.vo.User;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectDaoImpl implements ProjectDao {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     UserDaoImpl user;
     private Connection con;
 
@@ -25,8 +22,6 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public boolean insert(Project project) throws Exception {
-        Date startDate = formatter.parse(project.getStartDate());
-        Date endDate = formatter.parse(project.getEndDate());
         try (Statement stmt = con.createStatement()) {
             String result = project.getMembers().stream()
                     .map(member -> String.valueOf(member.getNo())) // no 필드만 추출
@@ -34,7 +29,7 @@ public class ProjectDaoImpl implements ProjectDao {
             stmt.executeUpdate(String.format(
                     "insert into myapp_projects(title, description, start_date, end_date, members)"
                             + "values('%s','%s','%tF','%tF','%s')",
-                    project.getTitle(), project.getDescription(), startDate, endDate, result));
+                    project.getTitle(), project.getDescription(), project.getStartDate(), project.getEndDate(), result));
             return true;
         }
     }
@@ -48,8 +43,8 @@ public class ProjectDaoImpl implements ProjectDao {
                 Project project = new Project();
                 project.setNo(rs.getInt("project_id"));
                 project.setTitle(rs.getString("title"));
-                project.setStartDate(formatter.format(rs.getDate("start_date")));
-                project.setEndDate(formatter.format(rs.getDate("end_date")));
+                project.setStartDate(rs.getDate("start_date"));
+                project.setEndDate(rs.getDate("end_date"));
                 list.add(project);
             }
             return list;
@@ -69,8 +64,8 @@ public class ProjectDaoImpl implements ProjectDao {
                 project.setNo(rs.getInt("project_id")); // 서버에서 가져온 레코드에서 user_id 컬럼 값을 꺼내 User 객체에 담는다.
                 project.setTitle(rs.getString("title")); // 서버에서 가져온 레코드에서 name 컬럼 값을 꺼내 User 객체에 담는다.
                 project.setDescription(rs.getString("description")); // 서버에서 가져온 레코드에서 email 컬럼 값을 꺼내 User 객체에 담는다.
-                project.setStartDate(formatter.format(rs.getDate("start_date")));
-                project.setEndDate(formatter.format(rs.getDate("end_date")));
+                project.setStartDate(rs.getDate("start_date"));
+                project.setEndDate(rs.getDate("end_date"));
                 String[] strArray = rs.getString("members").split(",");
                 for (String nums : strArray) {
                     int num = Integer.parseInt(nums);
@@ -90,8 +85,6 @@ public class ProjectDaoImpl implements ProjectDao {
                 .map(member -> String.valueOf(member.getNo())) // no 필드만 추출
                 .collect(Collectors.joining(","));
 
-        Date startDate = formatter.parse(project.getStartDate());
-        Date endDate = formatter.parse(project.getEndDate());
         try (Statement stmt = con.createStatement()) {
             String query = String.format(
                     "UPDATE myapp_projects SET " +
@@ -103,8 +96,8 @@ public class ProjectDaoImpl implements ProjectDao {
                             "WHERE project_id = %d",
                     project.getTitle(),
                     project.getDescription(),
-                    startDate,
-                    endDate,
+                    project.getStartDate(),
+                    project.getEndDate(),
                     result,
                     project.getNo()
             );

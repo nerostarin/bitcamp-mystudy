@@ -59,7 +59,7 @@ public class BoardDaoImpl implements BoardDao {
                 board.setNo(rs.getInt("board_id"));
                 board.setTitle(rs.getString("title"));
                 board.setContent(rs.getString("content"));
-                board.setCreatedDate(rs.getDate("created_date"));
+                board.setCreatedDate(rs.getTimestamp("created_date"));
                 board.setViewCount(rs.getInt("view_count"));
                 stmt.executeUpdate(String.format(
                         "update myapp_boards set" + " view_count ='%d'" + " where board_id=%d", board.getViewCount() + 1, no));
@@ -101,6 +101,16 @@ public class BoardDaoImpl implements BoardDao {
             int count = stmt.executeUpdate(String.format("delete from myapp_boards where board_id=%d", no));
 
             return count > 0;
+        }
+    }
+
+    @Override
+    public void updateViewCount(int boardNo, int count) throws Exception {
+        try (Statement stmt = con.createStatement()) {
+            stmt.executeUpdate(String.format(
+                    "update myapp_boards set" + " view_count='%d'" + " where board_id=%d",
+                    count,
+                    boardNo));
         }
     }
 }

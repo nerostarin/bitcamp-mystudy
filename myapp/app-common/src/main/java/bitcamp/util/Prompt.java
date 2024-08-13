@@ -1,5 +1,6 @@
 package bitcamp.util;
 
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -26,6 +27,11 @@ public class Prompt {
     public static int inputInt(String format, Object... args) {
         return Integer.parseInt(input(format, args));
     }
+
+    public static Date inputDate(String format, Object... args) {
+        return Date.valueOf(input(format, args));
+    }
+
 
     public static void close() {
         keyboardScanner.close();
