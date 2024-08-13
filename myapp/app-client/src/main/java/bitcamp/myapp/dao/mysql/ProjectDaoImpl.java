@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProjectDaoImpl implements ProjectDao {
     UserDaoImpl user;
@@ -22,14 +21,19 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public boolean insert(Project project) throws Exception {
+        int key = 0;
         try (Statement stmt = con.createStatement()) {
-            String result = project.getMembers().stream()
-                    .map(member -> String.valueOf(member.getNo())) // no 필드만 추출
-                    .collect(Collectors.joining(","));
             stmt.executeUpdate(String.format(
-                    "insert into myapp_projects(title, description, start_date, end_date, members)"
-                            + "values('%s','%s','%tF','%tF','%s')",
-                    project.getTitle(), project.getDescription(), project.getStartDate(), project.getEndDate(), result));
+                    "insert into myapp_projects(title, description, start_date, end_date)"
+                            + "values('%s','%s','%tF','%tF')",
+                    project.getTitle(), project.getDescription(), project.getStartDate(), project.getEndDate()));
+            ResultSet rs = stmt.executeQuery("SELECT * FROM myapp_projects ORDER BY project_id DESC LIMIT 1");
+            while (rs.next()) {
+                key = rs.getInt("project_id");
+            }
+            for (User user : project.getMembers()) {
+                stmt.executeUpdate(String.format("insert into myapp_project_members(project_id, user_id)" + "values(%d, %d)", key, user.getNo()));
+            }
             return true;
         }
     }
@@ -57,21 +61,28 @@ public class ProjectDaoImpl implements ProjectDao {
              Statement stmt = con.createStatement();
 
              // select 문 실행을 요청한다.
-             ResultSet rs = stmt.executeQuery("select * from myapp_projects where project_id=" + no)) {
+             ResultSet rs = stmt.executeQuery(
+                     "SELECT pt.project_id, pt.title, pt.description, pt.start_date, pt.end_date, GROUP_CONCAT(ft.user_id) as user_ids " +
+                             "FROM myapp_projects pt " +
+                             "JOIN myapp_project_members ft ON pt.project_id = ft.project_id " +
+                             "WHERE pt.project_id = " + no + " " +
+                             "GROUP BY pt.title, pt.description, pt.start_date, pt.end_date")) {
 
             if (rs.next()) { // select 실행 결과에서 1 개의 레코드를 가져온다.
                 Project project = new Project();
-                project.setNo(rs.getInt("project_id")); // 서버에서 가져온 레코드에서 user_id 컬럼 값을 꺼내 User 객체에 담는다.
-                project.setTitle(rs.getString("title")); // 서버에서 가져온 레코드에서 name 컬럼 값을 꺼내 User 객체에 담는다.
-                project.setDescription(rs.getString("description")); // 서버에서 가져온 레코드에서 email 컬럼 값을 꺼내 User 객체에 담는다.
+                project.setNo(rs.getInt("project_id"));
+                project.setTitle(rs.getString("title"));
+                project.setDescription(rs.getString("description"));
                 project.setStartDate(rs.getDate("start_date"));
                 project.setEndDate(rs.getDate("end_date"));
-                String[] strArray = rs.getString("members").split(",");
+                String[] strArray = rs.getString("user_ids").split(",");
+                
                 for (String nums : strArray) {
                     int num = Integer.parseInt(nums);
                     User members = user.findBy(num);
                     project.setMembers(members);
                 }
+
                 return project;
             }
 
@@ -81,9 +92,6 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public boolean update(Project project) throws Exception {
-        String result = project.getMembers().stream()
-                .map(member -> String.valueOf(member.getNo())) // no 필드만 추출
-                .collect(Collectors.joining(","));
 
         try (Statement stmt = con.createStatement()) {
             String query = String.format(
@@ -91,16 +99,20 @@ public class ProjectDaoImpl implements ProjectDao {
                             "title = '%s', " +
                             "description = '%s', " +
                             "start_date = '%tF', " +
-                            "end_date = '%tF', " +
-                            "members = '%s' " +
+                            "end_date = '%tF'" +
                             "WHERE project_id = %d",
                     project.getTitle(),
                     project.getDescription(),
                     project.getStartDate(),
                     project.getEndDate(),
-                    result,
                     project.getNo()
             );
+
+            stmt.executeUpdate(String.format("delete from myapp_project_members where project_id=%d", project.getNo()));
+
+            for (User user : project.getMembers()) {
+                stmt.executeUpdate(String.format("insert into myapp_project_members(project_id, user_id)" + "values(%d, %d)", project.getNo(), user.getNo()));
+            }
 
             int count = stmt.executeUpdate(query);
             return count > 0;
@@ -111,7 +123,7 @@ public class ProjectDaoImpl implements ProjectDao {
     public boolean delete(int no) throws Exception {
         try (// SQL을 서버에 전달할 객체 준비
              Statement stmt = con.createStatement()) {
-
+            stmt.executeUpdate(String.format("delete from myapp_project_members where project_id=%d", no));
             // delete 문 전달
             int count = stmt.executeUpdate(String.format("delete from myapp_projects where project_id=%d", no));
 
