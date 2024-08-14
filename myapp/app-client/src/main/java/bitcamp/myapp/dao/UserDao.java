@@ -15,4 +15,5 @@ public interface UserDao {
 
     boolean delete(int no) throws Exception;
 
+    User findByEmailAndPassword(String email, String password) throws Exception;
 }

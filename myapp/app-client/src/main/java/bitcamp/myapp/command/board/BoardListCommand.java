@@ -16,7 +16,7 @@ public class BoardListCommand implements Command {
         System.out.println("번호 제목 작성일 조회수");
         try {
             for (Board board : boardDao.list()) {
-                System.out.printf("%d %s %tY-%3$tm-%3$td %d\n", board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
+                System.out.printf("%d %s %s %tY-%4$tm-%4$td %d\n", board.getNo(), board.getTitle(), board.getWriter().getName(), board.getCreatedDate(), board.getViewCount());
             }
         } catch (Exception e) {
             System.out.println("게시물 목록 출력중 오류 발생");

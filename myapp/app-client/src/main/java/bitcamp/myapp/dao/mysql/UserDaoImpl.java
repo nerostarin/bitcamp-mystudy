@@ -101,4 +101,26 @@ public class UserDaoImpl implements UserDao {
             return count > 0;
         }
     }
+
+    @Override
+    public User findByEmailAndPassword(String email, String password) throws Exception {
+        try (// SQL을 서버에 전달할 객체 준비
+             Statement stmt = con.createStatement();
+
+             // select 문 실행을 요청한다.
+             ResultSet rs = stmt.executeQuery(String.format("select * from myapp_users where email = '%s' and pwd = sha1('%s')", email, password))) {
+
+            if (rs.next()) { // select 실행 결과에서 1 개의 레코드를 가져온다.
+                User user = new User();
+                user.setNo(rs.getInt("user_id")); // 서버에서 가져온 레코드에서 user_id 컬럼 값을 꺼내 User 객체에 담는다.
+                user.setName(rs.getString("name")); // 서버에서 가져온 레코드에서 name 컬럼 값을 꺼내 User 객체에 담는다.
+                user.setEmail(rs.getString("email")); // 서버에서 가져온 레코드에서 email 컬럼 값을 꺼내 User 객체에 담는다.
+                user.setTel(rs.getString("tel")); // 서버에서 가져온 레코드에서 tel 컬럼 값을 꺼내 User 객체에 담는다.
+
+                return user;
+            }
+            return null;
+
+        }
+    }
 }

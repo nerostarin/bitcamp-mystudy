@@ -2,6 +2,7 @@ package bitcamp.myapp;
 
 import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
+import bitcamp.myapp.listener.AuthApplicationListener;
 import bitcamp.myapp.listener.InitApplicationListener;
 import bitcamp.util.Prompt;
 
@@ -15,7 +16,7 @@ public class ClientApp {
     public static void main(String[] args) {
         ClientApp app = new ClientApp();
         app.addApplicationListener(new InitApplicationListener());
-
+        app.addApplicationListener(new AuthApplicationListener());
         app.execute();
     }
 
@@ -29,14 +30,13 @@ public class ClientApp {
 
     void execute() {
         try {
-            //"jdbc:mysql://localhost/studydb"
-            appCtx.setAttribute("url", "jdbc:mysql://localhost/studydb"/*Prompt.input("DBMS URL?")*/);
-            appCtx.setAttribute("username", "study"/*Prompt.input("아이디?")*/);
-            appCtx.setAttribute("password", "1111"/*Prompt.input("암호?")*/);
 
             for (ApplicationListener listener : listeners) {
                 try {
-                    listener.onStart(appCtx);
+                    if (!listener.onStart(appCtx)) {
+                        System.out.println("종료합니다");
+                        return;
+                    }
                 } catch (Exception e) {
                     System.out.println("리스너 실행 중 오류 발생");
                     e.printStackTrace();
