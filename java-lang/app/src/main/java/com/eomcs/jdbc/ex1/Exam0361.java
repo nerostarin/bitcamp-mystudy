@@ -8,7 +8,7 @@ public class Exam0361 {
   public static void main(String[] args) throws Exception {
     try (
         java.sql.Connection con = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/studydb", "study", "Bitcamp!@#123");
+            "jdbc:mysql://localhost:3306/studydb", "study", "1111");
         java.sql.Statement stmt = con.createStatement();
 
         ) {
@@ -20,6 +20,7 @@ public class Exam0361 {
       int count = stmt.executeUpdate(
           "delete from x_board_file where board_id = 2");
       System.out.printf("x_board_file 테이블 : %d 개 삭제 성공!\n", count);
+      //위에코드 주석하면 외부키로 인해서 삭제가 안된다 왜냐 자식테이블의 데이터 값이 없어져야 부모 테이블도 지울수 있다
 
       // => 부모 테이블의 데이터를 지운다.
       int count2 = stmt.executeUpdate(

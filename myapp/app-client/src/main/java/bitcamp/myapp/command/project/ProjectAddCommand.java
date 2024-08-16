@@ -5,15 +5,19 @@ import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 import bitcamp.util.Prompt;
 
+import java.sql.Connection;
+
 public class ProjectAddCommand implements Command {
 
     private ProjectDao projectDao;
     private ProjectMemberHandler memberHandler;
+    private Connection con;
 
 
-    public ProjectAddCommand(ProjectDao projectDao, ProjectMemberHandler memberHandler) {
+    public ProjectAddCommand(ProjectDao projectDao, ProjectMemberHandler memberHandler, Connection con) {
         this.projectDao = projectDao;
         this.memberHandler = memberHandler;
+        this.con = con;
     }
 
     @Override
@@ -28,12 +32,21 @@ public class ProjectAddCommand implements Command {
             System.out.println("팀원:");
             memberHandler.addMembers(project);
 
+            con.setAutoCommit(false);
             projectDao.insert(project);
+            con.commit();
+            System.out.println("등록했습니다.");
         } catch (Exception e) {
-            System.out.println("회원 등록중 오류 발생");
-            e.printStackTrace();
+            try {
+                con.rollback();
+            } catch (Exception e2) {
+            }
+            System.out.println("프로젝트 등록중 오류 발생");
+        } finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (Exception e3) {
+            }
         }
-
-        System.out.println("등록했습니다.");
     }
 }
