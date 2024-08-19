@@ -1,52 +1,43 @@
 package bitcamp.myapp.dao.mysql;
 
+import bitcamp.bitbatis.SqlSession;
 import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.vo.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
     private Connection con;
+    private SqlSession sqlSession;
 
-    public UserDaoImpl(Connection con) {
+    public UserDaoImpl(Connection con, SqlSession sqlSession) {
         this.con = con;
+        this.sqlSession = sqlSession;
     }
 
     @Override
     public boolean insert(User user) throws Exception {
-        try (PreparedStatement stmt = con.prepareStatement("insert into myapp_users(name, email, pwd, tel) values(?, ?, sha1(?), ?)")) {
-
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getTel());
-
-            stmt.executeUpdate();
-
-            return true;
-        }
+        sqlSession.insert("insert into myapp_users(name, email, pwd, tel) values(?, ?, sha1(?), ?)",
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getTel());
+        return true;
     }
 
     @Override
     public List<User> list() throws Exception {
-        try (PreparedStatement stmt = con.prepareStatement("select user_id, name, email from myapp_users order by user_id asc"); ResultSet rs = stmt.executeQuery()) {
-
-            ArrayList<User> list = new ArrayList<>();
-
-            while (rs.next()) {
-                User user = new User();
-                user.setNo(rs.getInt("user_id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                list.add(user);
-            }
-            return list;
-        }
+        return sqlSession.selectList(
+                "select "
+                        + " user_id as no,"
+                        + " name,"
+                        + " email"
+                        + " from myapp_users order by user_id asc",
+                User.class);
     }
 
     @Override

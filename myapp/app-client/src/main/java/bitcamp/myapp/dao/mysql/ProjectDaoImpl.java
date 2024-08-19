@@ -15,7 +15,7 @@ public class ProjectDaoImpl implements ProjectDao {
     private Connection con;
 
     public ProjectDaoImpl(Connection con) {
-        user = new UserDaoImpl(con);
+        //user = new UserDaoImpl(con);
         this.con = con;
     }
 
