@@ -7,16 +7,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.mysql:mysql-connector-j:8.4.0'
-
-    implementation project(':app-common')
-
-    implementation 'com.google.code.gson:gson:2.11.0'
-
     testImplementation libs.junit.jupiter
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
     implementation libs.guava
 }
 
@@ -32,10 +24,6 @@ application {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked"
 }
 
 // '$ gradle run' 명령을 통해 애플리케이션을 실행할 때 키보드 입력을 표준 입력으로 받는 방법

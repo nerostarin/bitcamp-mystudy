@@ -2,31 +2,28 @@ package bitcamp.myapp;
 
 import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
-import bitcamp.myapp.dao.skel.BoardDaoSkel;
-import bitcamp.myapp.dao.skel.ProjectDaoSkel;
-import bitcamp.myapp.dao.skel.UserDaoSkel;
+import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.listener.InitApplicationListener;
-import bitcamp.util.Prompt;
+import bitcamp.myapp.vo.User;
+import bitcamp.net.Prompt;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerApp {
+
     List<ApplicationListener> listeners = new ArrayList<>();
     ApplicationContext appCtx = new ApplicationContext();
 
-    UserDaoSkel userDaoSkel;
-    BoardDaoSkel boardDaoSkel;
-    ProjectDaoSkel projectDaoSkel;
-
     public static void main(String[] args) {
         ServerApp app = new ServerApp();
+
+        // 애플리케이션이 시작되거나 종료될 때 알림 받을 객체의 연락처를 등록한다.
         app.addApplicationListener(new InitApplicationListener());
+//    app.addApplicationListener(new AuthApplicationListener());
+
         app.execute();
     }
 
@@ -40,94 +37,64 @@ public class ServerApp {
 
     void execute() {
 
-        //애플리케이션이 시작 될때 리스너에게 알린다
-        for (ApplicationListener listener : listeners) {
-            try {
-                listener.onStart(appCtx);
-            } catch (Exception e) {
-                System.out.println("리스너 실행 중 오류 발생");
+        try {
+            // 애플리케이션이 시작될 때 리스너에게 알린다.
+            for (ApplicationListener listener : listeners) {
+                try {
+                    if (!listener.onStart(appCtx)) {
+                        System.out.println("종료합니다.");
+                        return;
+                    }
+                } catch (Exception e) {
+                    System.out.println("리스너 실행 중 오류 발생!");
+                    e.printStackTrace();
+                }
             }
-        }
 
-        userDaoSkel = (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
-        boardDaoSkel = (BoardDaoSkel) appCtx.getAttribute("boardDaoSkel");
-        projectDaoSkel = (ProjectDaoSkel) appCtx.getAttribute("projectDaoSkel");
-
-        System.out.println("서버 프로젝트 관리 시스템 시작");
-
-        try (ServerSocket serverSocket = new ServerSocket(8888)) {
-            System.out.println("서버실행중 .....");
+            ServerSocket serverSocket = new ServerSocket(8888);
+            System.out.println("서버 실행 중...");
 
             while (true) {
-                //클라이언트가 대기열에 오는 순간 대기열을 기다리린다는 코드
                 Socket socket = serverSocket.accept();
-//                new Thread() {
-//                    @Override
-//                    public void run() {
-//                        processRequest(socket);
-//                    }
-//                }.start();
+                Prompt prompt = new Prompt(socket, appCtx);
+                prompt.println("[프로젝트 관리 시스템]");
+                String email = prompt.input("이메일?");
+                String password = prompt.input("암호?");
 
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        processRequest(socket);
-//
-//                    }
-//                }).start();
+                UserDao userDao = (UserDao) appCtx.getAttribute("userDao");
+                User loginUser = userDao.findByEmailAndPassword(email, password);
+                if (loginUser == null) {
+                    prompt.println("이메일 또는 암호가 맞지 않습니다");
+                    prompt.print("<[goodbye!]>");
+                    prompt.end();
+                    prompt.close();
+                    continue;
+                }
 
-                new Thread(() -> processRequest(socket)).start();
+                //로그인 정보 보관
+                prompt.setAttribute("loginUser", loginUser);
+
+                appCtx.getMainMenu().execute(prompt);
+                prompt.print("<[goodbye!]>");
+                prompt.end();
+                prompt.close();
             }
 
-        } catch (Exception e) {
-            System.out.println("통신중 오류 발생");
-            e.printStackTrace();
+
+        } catch (Exception ex) {
+            System.out.println("실행 오류!");
+            ex.printStackTrace();
         }
 
-        System.out.println("종료합니다");
+        System.out.println("종료합니다.");
 
-        Prompt.close();
-
-        //애플리케이션이 종료 될때 리스너에게 알린다
+        // 애플리케이션이 종료될 때 리스너에게 알린다.
         for (ApplicationListener listener : listeners) {
             try {
-                listener.onShutDown(appCtx);
+                listener.onShutdown(appCtx);
             } catch (Exception e) {
-                System.out.println("종료되는 리스너 실행 중 오류 발생");
+                System.out.println("리스너 실행 중 오류 발생!");
             }
-        }
-    }
-
-    void processRequest(Socket socket) {
-        String remoteHost = null;
-        int port = 0;
-
-        try (Socket s = socket) {
-
-            InetSocketAddress addr = (InetSocketAddress) s.getRemoteSocketAddress();//클라이언트의 소켓 주소 리턴해주는 아이
-            remoteHost = addr.getHostString();
-            port = addr.getPort();
-
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-
-            String dataName = in.readUTF();
-
-            switch (dataName) {
-                case "users":
-                    userDaoSkel.service(in, out);
-                    break;
-                case "projects":
-                    projectDaoSkel.service(in, out);
-                    break;
-                case "boards":
-                    boardDaoSkel.service(in, out);
-                    break;
-                default:
-
-            }
-        } catch (Exception e) {
-            System.out.printf("%s : %d 번 클라이언트와 연결중 오류 발생\n", remoteHost, port);
         }
     }
 }
