@@ -40,6 +40,7 @@ public class ContextLoaderListener implements ServletContextListener {
             ctx.setAttribute("userDao", userDao);
             ctx.setAttribute("boardDao", boardDao);
             ctx.setAttribute("projectDao", projectDao);
+            ctx.setAttribute("sqlSession", sqlSessionFactoryProxy);
 
         } catch (Exception e) {
             System.out.println("객체 준비중 오류가 발생하였습니다 contextInitialized");
