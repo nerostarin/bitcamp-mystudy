@@ -5,17 +5,17 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
 import bitcamp.net.Prompt;
-import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class BoardDeleteCommand implements Command {
 
     private BoardDao boardDao;
-    private SqlSession sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
-    public BoardDeleteCommand(BoardDao boardDao, SqlSession sqlSession) {
+    public BoardDeleteCommand(BoardDao boardDao, SqlSessionFactory sqlSessionFactory) {
 
         this.boardDao = boardDao;
-        this.sqlSession = sqlSession;
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class BoardDeleteCommand implements Command {
             }
 
             boardDao.delete(boardNo);
-            sqlSession.commit();
+            sqlSessionFactory.openSession(false).commit();
             prompt.printf("'%s'번 게시글을 삭제 했습니다.\n", deletedBoard.getNo());
 
         } catch (Exception e) {
-            sqlSession.rollback();
+            sqlSessionFactory.openSession(false).rollback();
             prompt.println("삭제 중 오류 발생!");
         }
     }
