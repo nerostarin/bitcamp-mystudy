@@ -6,7 +6,7 @@ import java.sql.Connection;
 
 public class SqlSessionFactoryProxy implements SqlSessionFactory {
 
-    //SqlSession 스레드 전용 변수
+    // SqlSession 객체를 담을 스레드 전용 변수
     ThreadLocal<SqlSession> sqlSessionThreadLocal = new ThreadLocal<>();
     private SqlSessionFactory original;
 
@@ -21,20 +21,33 @@ public class SqlSessionFactoryProxy implements SqlSessionFactory {
 
     @Override
     public SqlSession openSession(boolean autoCommit) {
-        //스레드 별도 한 개의 sqlsession 객체를 생설해줌
-        //1 스레드 저장소 보관된 sqlsession 객체를 찾는다
+
+        // 1) 현재 스레드 저장소 보관된 SqlSession 객체를 찾는다.
         SqlSession sqlSession = sqlSessionThreadLocal.get();
-        //2 없으면
+
+        // 2) 없으면,
         if (sqlSession == null) {
-            //오리지널 객체를 통해 새로 얻는다
+            //    - 오리지널 객체를 통해 새로 얻는다.
             sqlSession = original.openSession(autoCommit);
 
-            //다음에 이 객체를 사용하기 위해 스래드 보관소에 저장한다
+            //    - 다음에 이 객체를 사용하기 위해 현재 스레드 보관소에 저장한다.
             sqlSessionThreadLocal.set(sqlSession);
         }
-        //3 있다면
-        //  해당 스레드의 sqlsession 객체를 리턴한다
+
         return sqlSession;
+    }
+
+    public void clearSession() {
+        try {
+            SqlSession sqlSession = sqlSessionThreadLocal.get();
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        } catch (Exception e) {
+            // SqlSession 객체를 close() 하다가 발생된 오류는 무시한다.
+        }
+        // 스레드에서 SqlSession 객체를 제거한다.
+        sqlSessionThreadLocal.remove();
     }
 
     @Override

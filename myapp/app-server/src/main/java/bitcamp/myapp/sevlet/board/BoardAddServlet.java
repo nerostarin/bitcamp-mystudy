@@ -1,25 +1,29 @@
-package bitcamp.myapp.sevlet.project;
+package bitcamp.myapp.sevlet.board;
 
-import bitcamp.myapp.dao.ProjectDao;
-import bitcamp.myapp.vo.Project;
+import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/project/view")
-public class ProjectViewServlet extends GenericServlet {
+@WebServlet("/board/add")
+public class BoardAddServlet extends GenericServlet {
 
-    private ProjectDao projectDao;
+    private BoardDao boardDao;
+    private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public void init() throws ServletException {
-        projectDao = (ProjectDao) this.getServletContext().getAttribute("projectDao");
+        boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
+        sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
     }
 
     @Override
@@ -31,6 +35,7 @@ public class ProjectViewServlet extends GenericServlet {
         out.println("<html>");
         out.println("<head>");
         out.println("    <meta charset='UTF-8'>");
+        out.println("    <meta content='1; url=/board/list'  http-equiv='refresh'>");
         out.println("    <title>Title</title>");
         out.println("<link href='/css/common.css' rel='stylesheet'>");
         out.println("</head>");
@@ -39,27 +44,19 @@ public class ProjectViewServlet extends GenericServlet {
         out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
         out.println("</header>");
         try {
-            out.println("<h1>프로젝트 조회</h1>");
-            int projectNo = Integer.parseInt(req.getParameter("no"));
+            Board board = new Board();
+            board.setTitle(req.getParameter("title"));
+            board.setContent(req.getParameter("content"));
+            User loginUser = (User) ((HttpServletRequest) req).getSession().getAttribute("loginUser");
+            board.setWriter(loginUser);
 
-            Project project = projectDao.findBy(projectNo);
-            if (project == null) {
-                out.println("없는 프로젝트입니다.");
-                out.println("</body>");
-                out.println("</html>");
-                return;
-            }
+            boardDao.insert(board);
+            sqlSessionFactory.openSession(false).commit();
+            out.println("<p>등록 성공입니다</p>");
 
-            out.printf("<p>프로젝트명: %s</p>\n", project.getTitle());
-            out.printf("<p>설명: %s</p>\n", project.getDescription());
-            out.printf("<p>기간: %s ~ %s</p>\n", project.getStartDate(), project.getEndDate());
-
-            out.println("<p>팀원:</p>");
-            for (User user : project.getMembers()) {
-                out.printf("<p>- %s</p>\n", user.getName());
-            }
         } catch (Exception e) {
-            out.println("조회 중 오류 발생!");
+            sqlSessionFactory.openSession(false).rollback();
+            out.println("<p>등록 중 오류 발생!</p>");
             e.printStackTrace();
         }
         out.println("</body>");

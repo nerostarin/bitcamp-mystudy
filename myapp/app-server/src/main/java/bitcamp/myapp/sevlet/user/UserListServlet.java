@@ -31,13 +31,16 @@ public class UserListServlet implements Servlet {
         out.println("<head>");
         out.println("<meta charset='UTF-8'>");
         out.println("<title>Title</title>");
+        out.println("<link href='/css/common.css' rel='stylesheet'>");
         out.println("</head>");
         out.println("<body>");
-
+        out.println("<header>");
+        out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
+        out.println("</header>");
         try {
             out.println("<h1>[회원 목록]</h1>");
-
-            out.println("<table border = '1'>");
+            out.println("<p><a href ='/user/form.html'>새 회원</a></p>");
+            out.println("<table");
             out.println("<thead>");
             out.println("<tr><th>번호</th><th>이름</th><th>이메일</th></tr>");
             out.println("</thead>");

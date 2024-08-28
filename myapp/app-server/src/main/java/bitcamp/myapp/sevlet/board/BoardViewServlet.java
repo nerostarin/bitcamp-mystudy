@@ -21,7 +21,7 @@ public class BoardViewServlet extends GenericServlet {
     @Override
     public void init() throws ServletException {
         boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
-        sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSession");
+        sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
     }
 
 
@@ -35,8 +35,12 @@ public class BoardViewServlet extends GenericServlet {
         out.println("<head>");
         out.println("    <meta charset='UTF-8'>");
         out.println("    <title>Title</title>");
+        out.println("<link href='/css/common.css' rel='stylesheet'>");
         out.println("</head>");
         out.println("<body>");
+        out.println("<header>");
+        out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
+        out.println("</header>");
         try {
             out.println("<h1>게시판 조회</h1>");
 
@@ -45,6 +49,8 @@ public class BoardViewServlet extends GenericServlet {
             Board board = boardDao.findBy(boardNo);
             if (board == null) {
                 out.println("없는 게시글입니다.");
+                out.println("</body>");
+                out.println("</html>");
                 return;
             }
 
