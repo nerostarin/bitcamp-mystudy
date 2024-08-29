@@ -9,6 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,17 +29,8 @@ public class LoginServlet extends GenericServlet {
         res.setContentType("text/html;charset=UTF-8");
 
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("    <meta charset='UTF-8'>");
-        out.println("    <title>Title</title>");
-        out.println("<link href='/css/common.css' rel='stylesheet'>");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<header>");
-        out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
-        out.println("</header>");
+        req.getRequestDispatcher("/header").include(req, res);
+
         try {
             out.println("<h1>로그인 결과</h1>");
 
@@ -50,6 +42,7 @@ public class LoginServlet extends GenericServlet {
                 out.println("<p>이메일 또는 암호가 맞지 않습니다.</p>");
                 out.println("</body>");
                 out.println("</html>");
+                ((HttpServletResponse) res).setHeader("Refresh", "1;url=/auth/form");
                 return;
             }
             //http프로토콜 관련 기능을 사용하려면
@@ -71,5 +64,6 @@ public class LoginServlet extends GenericServlet {
 
         out.println("</body>");
         out.println("</html>");
+        ((HttpServletResponse) res).sendRedirect("/");
     }
 }

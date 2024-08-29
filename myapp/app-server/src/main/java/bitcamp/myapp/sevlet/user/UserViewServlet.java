@@ -26,17 +26,9 @@ public class UserViewServlet extends GenericServlet {
         res.setContentType("text/html;charset=UTF-8");
 
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("    <meta charset='UTF-8'>");
-        out.println("    <title>Title</title>");
-        out.println("<link href='/css/common.css' rel='stylesheet'>");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<header>");
-        out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
-        out.println("</header>");
+
+        req.getRequestDispatcher("/header").include(req, res);
+
         try {
             out.println("<h1>회원 조회</h1>");
 
@@ -49,10 +41,15 @@ public class UserViewServlet extends GenericServlet {
                 out.println("</html>");
                 return;
             }
-
-            out.printf("<p>이름: %s</p>\n", user.getName());
-            out.printf("<p>이메일: %s</p>\n", user.getEmail());
-            out.printf("<p>연락처: %s</p>\n", user.getTel());
+            out.println("<form action = '/user/update'>");
+            out.printf("번호:<input name='no' readonly type='text' value='%d'><br>\n", user.getNo());
+            out.printf("이름:<input name='name' type='text' value='%s'><br>\n", user.getName());
+            out.printf("이메일:<input name='email' type='text' value='%s'><br>\n", user.getEmail());
+            out.println("암호:<input name='password' type='password'><br>");
+            out.printf("연락처:<input name='tel' type='text' value='%s'><br>\n", user.getTel());
+            out.println("<button>변경</button>");
+            out.printf("<button type='button' onclick='location.href=\"/user/delete?no=%d\"'>삭제</button>", user.getNo());
+            out.println("</form>");
 
         } catch (Exception e) {
             out.println("<p>조회 중 오류 발생!</p>");

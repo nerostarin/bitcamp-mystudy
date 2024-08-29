@@ -26,20 +26,12 @@ public class UserListServlet implements Servlet {
         //출력 문자열(UTF-16BE)은 ISO-8859-1 문자집합으로 인코딩이 된다
         PrintWriter out = res.getWriter();
 
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<meta charset='UTF-8'>");
-        out.println("<title>Title</title>");
-        out.println("<link href='/css/common.css' rel='stylesheet'>");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<header>");
-        out.println("<a href=' / '><img src='/images/home.png' style='vertical-align:middle;'></a>프로젝트 관리 시스템");
-        out.println("</header>");
+        //웹 페이지를 만들 때 앞 부분은 Header Servlet에게 맡긴다
+        req.getRequestDispatcher("/header").include(req, res);
+
         try {
             out.println("<h1>[회원 목록]</h1>");
-            out.println("<p><a href ='/user/form.html'>새 회원</a></p>");
+            out.println("<p><a href ='/user/form'>새 회원</a></p>");
             out.println("<table");
             out.println("<thead>");
             out.println("<tr><th>번호</th><th>이름</th><th>이메일</th></tr>");

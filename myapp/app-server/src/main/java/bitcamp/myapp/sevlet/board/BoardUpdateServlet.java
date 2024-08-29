@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/board/add")
-public class BoardAddServlet extends GenericServlet {
+@WebServlet("/board/update")
+public class BoardUpdateServlet extends GenericServlet {
 
     private BoardDao boardDao;
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public void init() throws ServletException {
-        boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
-        sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
+        this.boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
+        this.sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
     }
 
     @Override
@@ -33,23 +33,40 @@ public class BoardAddServlet extends GenericServlet {
 
         PrintWriter out = res.getWriter();
         req.getRequestDispatcher("/header").include(req, res);
-
         try {
-            Board board = new Board();
+
+            out.println("<h1>게시글 변경 결과</h1>");
+
+            User loginUser = (User) ((HttpServletRequest) req).getSession().getAttribute("loginUser");
+
+            int boardNo = Integer.parseInt(req.getParameter("no"));
+            Board board = boardDao.findBy(boardNo);
+
+            if (board == null) {
+                out.println("<p>없는 게시글입니다.</p>");
+                out.println("</body>");
+                out.println("</html>");
+                return;
+            } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+                out.println("<p>변경 권한이 없습니다.</p>");
+                out.println("</body>");
+                out.println("</html>");
+                ((HttpServletResponse) res).setHeader("Refresh", "1;url=/board/list");
+                return;
+            }
+
             board.setTitle(req.getParameter("title"));
             board.setContent(req.getParameter("content"));
-            User loginUser = (User) ((HttpServletRequest) req).getSession().getAttribute("loginUser");
-            board.setWriter(loginUser);
-
-            boardDao.insert(board);
+            boardDao.update(board);
             sqlSessionFactory.openSession(false).commit();
-            out.println("<p>등록 성공입니다</p>");
+            out.println("<p>변경 했습니다.</p>");
 
         } catch (Exception e) {
             sqlSessionFactory.openSession(false).rollback();
-            out.println("<p>등록 중 오류 발생!</p>");
+            out.println("<p>변경 중 오류 발생!</p>");
             e.printStackTrace();
         }
+
         out.println("</body>");
         out.println("</html>");
         ((HttpServletResponse) res).setHeader("Refresh", "1;url=/board/list");
