@@ -12,7 +12,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -30,13 +29,8 @@ public class ProjectUpdateServlet extends GenericServlet {
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-
-        PrintWriter out = res.getWriter();
-        req.getRequestDispatcher("/header").include(req, res);
 
         try {
-            out.println("<h1>프로젝트 변경 결과</h1>");
 
             Project project = new Project();
             project.setNo(Integer.parseInt(req.getParameter("no")));
@@ -55,10 +49,7 @@ public class ProjectUpdateServlet extends GenericServlet {
             }
 
             if (!projectDao.update(project)) {
-                out.println("<p>없는 프로젝트입니다</p>");
-                out.println("</body>");
-                out.println("</html>");
-                ((HttpServletResponse) res).setHeader("Refresh", "1;url=/board/list");
+                throw new Exception("없는 프로젝트 입니다");
             }
 
             projectDao.deleteMembers(project.getNo());
@@ -68,15 +59,13 @@ public class ProjectUpdateServlet extends GenericServlet {
 
             projectDao.update(project);
             sqlSessionFactory.openSession(false).commit();
-            out.println("<p>변경하였습니다</p>");
+            ((HttpServletResponse) res).sendRedirect("/project/list");
 
         } catch (Exception e) {
             sqlSessionFactory.openSession(false).rollback();
-            out.println("<p>변경중 오류 발생</p>");
+            req.setAttribute("exception", e);
+            req.getRequestDispatcher("/error.jsp").forward(req, res);
         }
-        out.println("</body>");
-        out.println("</html>");
-        ((HttpServletResponse) res).setHeader("Refresh", "1;url=/project/list");
 
     }
 

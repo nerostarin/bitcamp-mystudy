@@ -3,65 +3,42 @@ package bitcamp.myapp.sevlet.project;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 
-import javax.servlet.*;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet("/project/list")
-public class ProjectListServlet implements Servlet {
+public class ProjectListServlet extends GenericServlet {
 
     private ProjectDao projectDao;
-    private ServletConfig config;
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
-        this.config = config;
-        ServletContext ctx = config.getServletContext();
-        projectDao = (ProjectDao) ctx.getAttribute("projectDao");
-    }
+    public void init() throws ServletException {
 
-    @Override
-    public ServletConfig getServletConfig() {
-        return null;
+        projectDao = (ProjectDao) this.getServletContext().getAttribute("projectDao");
     }
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
 
-        res.setContentType("text/html; charset=UTF-8");
-
-        PrintWriter out = res.getWriter();
-
-        req.getRequestDispatcher("/header").include(req, res);
 
         try {
-            out.println("<h1>[프로젝트 목록]</h1>");
-            out.println("<p><a href ='/project/form'>새 프로젝트</a></p>");
-            out.println("<table border = '1'>");
-            out.println("<thead>");
-            out.println("<tr><th>번호</th><th>제목</th><th>시작일 ~ 종료일</th></tr>");
-            out.println("</thead>");
-            out.println("<tbody>");
-            for (Project project : projectDao.list()) {
-                out.printf("<tr><td>%d</td><td><a href='/project/view?no=%1$d'>%s</a></td><td>%s ~ %s</td></tr>\n", project.getNo(), project.getTitle(), project.getStartDate(), project.getEndDate());
-            }
-            out.println("</tbody>");
-            out.println("</table>");
+            List<Project> list = projectDao.list();
+
+            // 콘텐트 출력은 JSP에 맡긴다.
+            req.setAttribute("list", list); // JSP를 실행하기 전에 JSP가 사용할 객체를 ServletRequest 보관소에 보관한다.
+
+            // 콘텐트 타입은 include() 호출 전에 실행해야 한다.
+            res.setContentType("text/html;charset=UTF-8");
+            req.getRequestDispatcher("/project/list.jsp").include(req, res);
+
         } catch (Exception e) {
-            out.println("목록 조회 중 오류 발생!");
+            req.setAttribute("exception", e);
+            req.getRequestDispatcher("/error.jsp").include(req, res);
         }
-        out.println("</body>");
-        out.println("</html>");
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "";
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }
