@@ -3,12 +3,12 @@
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-
 <%@ page import="bitcamp.myapp.vo.User"%>
-<%@ page import="java.util.List"%>
 
 <jsp:include page="/header.jsp"/>
+
 <h1>회원 조회</h1>
+
 <%
 User user = (User) request.getAttribute("user");
 if (user == null) {
@@ -33,7 +33,6 @@ if (user == null) {
 <%
 }
 %>
-  </tbody>
-</table>
+
 </body>
 </html>

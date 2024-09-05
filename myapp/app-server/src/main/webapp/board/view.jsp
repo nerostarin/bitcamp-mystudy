@@ -3,12 +3,12 @@
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-
 <%@ page import="bitcamp.myapp.vo.Board"%>
-<%@ page import="java.util.List"%>
 
 <jsp:include page="/header.jsp"/>
-<h1>게시판 조회</h1>
+
+<h1>게시글 조회</h1>
+
 <%
 Board board = (Board) request.getAttribute("board");
 if (board == null) {
@@ -29,13 +29,12 @@ if (board == null) {
       조회수: <input readonly type='text' value='<%=board.getViewCount()%>'><br>
       작성자: <input readonly type='text' value='<%=board.getWriter().getName()%>'><br>
       <button>변경</button>
-      <button type='button' onclick='location.href=\"/board/delete?no=<%=board.getNo()%>\"'>삭제</button>
+      <button type='button' onclick='location.href="/board/delete?no=<%=board.getNo()%>"'>삭제</button>
 </form>
 
 <%
 }
 %>
-  </tbody>
-</table>
+
 </body>
 </html>

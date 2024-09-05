@@ -3,6 +3,7 @@ package com.eomcs.web.ex06;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 //    예) DB 연결, 소켓 연결, 필요한 환경 변수 로딩, 스프링 IoC 컨테이너 준비 등
 //
 //@WebServlet(value="/ex06/s1", loadOnStartup=1)
+@WebServlet(value="/ex06/s1")
 @SuppressWarnings("serial")
 public class Servlet01 extends HttpServlet {
 
