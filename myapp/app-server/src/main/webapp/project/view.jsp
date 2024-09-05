@@ -33,7 +33,7 @@ if (project == null) {
     List<User> users = (List<User>) request.getAttribute("users");
 %>
 
-<form action='/project/update'>
+<form action='/project/update' method="post">
     번호: <input readonly name='no' type='text' value='<%=project.getNo()%>'><br>
     프로젝트명: <input name='title' type='text' value='<%=project.getTitle()%>'><br>
     설명: <textarea name='description'><%=project.getDescription()%></textarea><br>
