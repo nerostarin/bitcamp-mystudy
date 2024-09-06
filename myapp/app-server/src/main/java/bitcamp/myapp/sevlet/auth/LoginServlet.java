@@ -3,18 +3,13 @@ package bitcamp.myapp.sevlet.auth;
 import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.vo.User;
 
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet("/auth/login")
-public class LoginServlet extends GenericServlet {
+public class LoginServlet extends HttpServlet {
 
     private UserDao userDao;
 
@@ -24,7 +19,7 @@ public class LoginServlet extends GenericServlet {
     }
 
     @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         try {
             String email = req.getParameter("email");
@@ -32,12 +27,21 @@ public class LoginServlet extends GenericServlet {
 
             User user = userDao.findByEmailAndPassword(email, password);
             if (user == null) {
-                ((HttpServletResponse) res).setHeader("Refresh", "1;url=/auth/form");
+                res.setHeader("Refresh", "1;url=/auth/form");
                 res.setContentType("text/html;charset='UTF-8'");
                 req.getRequestDispatcher("/auth/fail.jsp").include(req, res);
                 return;
             }
 
+            if (req.getParameter("saveEmail") != null) {
+                Cookie cookie = new Cookie("email", email);
+                cookie.setMaxAge(60 * 60 * 24 * 7);
+                res.addCookie(cookie);
+            } else {
+                Cookie cookie = new Cookie("email", "test@test.com");
+                cookie.setMaxAge(0);
+                res.addCookie(cookie);
+            }
             HttpServletRequest httpReq = (HttpServletRequest) req;
 
             //클라이언트 전용보관소를 알아낸다
