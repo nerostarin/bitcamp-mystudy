@@ -37,6 +37,7 @@ if (board == null) {
 <%    } %>
       </ul>
 <% } %>
+      input type='file' name='files' multiple><br>
       <button>변경</button>
       <button type='button' onclick='location.href="/board/delete?no=<%=board.getNo()%>"'>삭제</button>
 </form>
