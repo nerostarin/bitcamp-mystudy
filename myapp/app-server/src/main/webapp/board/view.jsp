@@ -33,11 +33,13 @@ if (board == null) {
 <% if (board.getAttachedFiles().size() > 0) { %>
       <ul>
 <%    for (AttachedFile attachedFile : board.getAttachedFiles()) { %>
-        <li><a href="/download?path=board&fileNo=<%=attachedFile.getFileNo()%>"><%=attachedFile.getOriginFilename()%></a></li>
+        <li>
+        <a href="/download?path=board&fileNo=<%=attachedFile.getFileNo()%>"><%=attachedFile.getOriginFilename()%></a>
+        <a href="/board/file/delete?boardNo=<%=board.getNo()%>&fileNo=<%=attachedFile.getFileNo()%>">[삭제]</a>
+        </li>
 <%    } %>
       </ul>
 <% } %>
-      input type='file' name='files' multiple><br>
       <button>변경</button>
       <button type='button' onclick='location.href="/board/delete?no=<%=board.getNo()%>"'>삭제</button>
 </form>
