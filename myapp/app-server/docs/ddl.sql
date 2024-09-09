@@ -54,6 +54,18 @@ alter table myapp_project_members
   add constraint myapp_project_members_fk2 foreign key (project_id) references myapp_projects (project_id),
   add constraint primary key (user_id, project_id);
 
+create table myapp_board_files(
+    board_file_id int not null,
+    filename varchar(255) not null,
+    origin_filename varchar(255) null,
+    board_id int not null
+);
+
+alter table myapp_board_files
+    add constraint primary key (board_file_id),
+    modify column board_file_id int not null auto_increment,
+    add constraint myapp_board_files_fk foreign key (board_id) references myapp_boards(board_id);
+
 
 
 
