@@ -74,8 +74,8 @@
     <insert id="insertFiles" parameterType="board">
         insert into myapp_board_files(filename, origin_filename, board_id)
         values
-        <foreach collection="attachedFiles" item="member" separator=",">
-            (#{attachedFile.filename}, #{attachedFile.originFilename}, #{fileNo})
+        <foreach collection="attachedFiles" item="attachedFile" separator=",">
+            (#{attachedFile.filename}, #{attachedFile.originFilename}, #{no})
         </foreach>
     </insert>
 </mapper>

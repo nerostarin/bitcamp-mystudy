@@ -79,9 +79,9 @@ public class BoardAddServlet extends HttpServlet {
 
             sqlSessionFactory.openSession(false).commit();
             res.sendRedirect("/board/list");
-            
+
         } catch (Exception e) {
-            //sqlSessionFactory.openSession(false).rollback();
+            sqlSessionFactory.openSession(false).rollback();
             req.setAttribute("exception", e);
             req.getRequestDispatcher("/error.jsp").forward(req, res);
 
