@@ -111,12 +111,6 @@
 
     <delete id="deleteFile" parameterType="int">
         delete from myapp_board_files
-        where board_file_id=#{fileNo}
+        where board_file_id = #{fileNo}
     </delete>
-
-    <delete id="deleteFiles" parameterType="int">
-        delete from myapp_board_files
-        where board_id=#{boardNo}
-    </delete>
-
 </mapper>

@@ -1,4 +1,4 @@
-package bitcamp.myapp.sevlet.board;
+package bitcamp.myapp.servlet.board;
 
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
@@ -28,7 +28,6 @@ public class BoardUpdateServlet extends HttpServlet {
     private SqlSessionFactory sqlSessionFactory;
     private String uploadDir;
 
-
     @Override
     public void init() throws ServletException {
         this.boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
@@ -40,25 +39,26 @@ public class BoardUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
             User loginUser = (User) req.getSession().getAttribute("loginUser");
-
             int boardNo = Integer.parseInt(req.getParameter("no"));
             Board board = boardDao.findBy(boardNo);
 
             if (board == null) {
-                throw new Exception("없는 게시글 입니다");
+                throw new Exception("없는 게시글입니다.");
             } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-                throw new Exception("작성자가 아니거나 로그인을 해주세요");
+                throw new Exception("변경 권한이 없습니다.");
             }
 
             board.setTitle(req.getParameter("title"));
             board.setContent(req.getParameter("content"));
 
             ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+
             Collection<Part> parts = req.getParts();
             for (Part part : parts) {
                 if (!part.getName().equals("files") || part.getSize() == 0) {
                     continue;
                 }
+
                 AttachedFile attachedFile = new AttachedFile();
                 attachedFile.setFilename(UUID.randomUUID().toString());
                 attachedFile.setOriginFilename(part.getSubmittedFileName());
@@ -66,13 +66,11 @@ public class BoardUpdateServlet extends HttpServlet {
                 part.write(this.uploadDir + "/" + attachedFile.getFilename());
 
                 attachedFiles.add(attachedFile);
-
             }
 
             board.setAttachedFiles(attachedFiles);
 
             boardDao.update(board);
-
             if (board.getAttachedFiles().size() > 0) {
                 boardDao.insertFiles(board);
             }
