@@ -5,6 +5,9 @@ import bitcamp.myapp.dao.DaoFactory;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.mybatis.SqlSessionFactoryProxy;
+import bitcamp.myapp.service.DefaultBoardService;
+import bitcamp.myapp.service.DefaultProjectService;
+import bitcamp.myapp.service.DefaultUserService;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -36,10 +39,15 @@ public class ContextLoaderListener implements ServletContextListener {
             BoardDao boardDao = daoFactory.createObject(BoardDao.class);
             ProjectDao projectDao = daoFactory.createObject(ProjectDao.class);
 
+            DefaultUserService userService = new DefaultUserService(userDao, sqlSessionFactoryProxy);
+            DefaultBoardService boardService = new DefaultBoardService(boardDao, sqlSessionFactoryProxy);
+            DefaultProjectService projectService = new DefaultProjectService(projectDao, sqlSessionFactoryProxy);
+
+
             ServletContext ctx = sce.getServletContext();
-            ctx.setAttribute("userDao", userDao);
-            ctx.setAttribute("boardDao", boardDao);
-            ctx.setAttribute("projectDao", projectDao);
+            ctx.setAttribute("userService", userService);
+            ctx.setAttribute("boardService", boardService);
+            ctx.setAttribute("projectService", projectService);
             ctx.setAttribute("sqlSessionFactory", sqlSessionFactoryProxy);
 
         } catch (Exception e) {

@@ -16,8 +16,8 @@
 </pre>
 
 <c:set var="name" value="홍길동"/>
-<c:set var="age" value="16"/>
-<c:set var="gender" value="man"/>
+<c:set var="age" value="26"/>
+<c:set var="gender" value="woman"/>
 
 <c:if test="${not empty name}">
     <p>${name}님 환영합니다!
@@ -28,6 +28,8 @@
 <c:if test="${age >= 19}">
     <p>성년입니다.</p>
 </c:if>
+<c:if test="${gender == 'woman'}" var="r1"/>
+${pageScope.r1 ? "여성" : "남성"}<br>
 <hr>
 
 <h2>조건문의 결과를 보관소에 저장하기</h2>

@@ -38,7 +38,7 @@ scope을 생략하면 기본이 PageContext 이다.
 <c:set var="name3">유관순</c:set>
 1: ${requestScope.name3}<br>
 2: ${pageScope.name3}<br>
-3: ${name3}<br>
+3: ${3}<br>
 
 <h2>객체의 프로퍼티 값 설정하기</h2>
 <jsp:useBean id="m1" class="com.eomcs.web.vo.Member"/>

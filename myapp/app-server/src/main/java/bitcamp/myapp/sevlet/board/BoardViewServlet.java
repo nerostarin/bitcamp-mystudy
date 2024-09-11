@@ -1,8 +1,7 @@
 package bitcamp.myapp.sevlet.board;
 
-import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.Board;
-import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,13 +13,11 @@ import java.io.IOException;
 @WebServlet("/board/view")
 public class BoardViewServlet extends HttpServlet {
 
-    private BoardDao boardDao;
-    private SqlSessionFactory sqlSessionFactory;
+    private BoardService boardService;
 
     @Override
     public void init() throws ServletException {
-        boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
-        sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
+        boardService = (BoardService) this.getServletContext().getAttribute("boardService");
     }
 
 
@@ -29,20 +26,14 @@ public class BoardViewServlet extends HttpServlet {
 
         try {
             int boardNo = Integer.parseInt(req.getParameter("no"));
-            Board board = boardDao.findBy(boardNo);
+            Board board = boardService.get(boardNo);
+            boardService.increaseViewCount(boardNo);
             req.setAttribute("board", board);
-
-            if (board != null) {
-                board.setViewCount(board.getViewCount() + 1);
-                boardDao.updateViewCount(board.getNo(), board.getViewCount());
-                sqlSessionFactory.openSession(false).commit();
-            }
 
             res.setContentType("text/html;charset=UTF-8");
             req.getRequestDispatcher("/board/view.jsp").include(req, res);
 
         } catch (Exception e) {
-            sqlSessionFactory.openSession(false).rollback();
             req.setAttribute("exception", e);
             req.getRequestDispatcher("/error.jsp").forward(req, res);
         }
