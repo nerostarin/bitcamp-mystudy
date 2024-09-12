@@ -53,11 +53,10 @@ public class ProjectUpdateServlet extends HttpServlet {
             }
 
             projectService.update(project);
-            res.sendRedirect("/project/list");
+            req.setAttribute("viewName", "redirect:list");
 
         } catch (Exception e) {
             req.setAttribute("exception", e);
-            req.getRequestDispatcher("/error.jsp").forward(req, res);
         }
 
     }

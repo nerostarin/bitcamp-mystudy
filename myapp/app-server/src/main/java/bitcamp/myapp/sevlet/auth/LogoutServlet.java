@@ -14,6 +14,6 @@ public class LogoutServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         req.getSession().invalidate();
-        res.sendRedirect("/");
+        req.setAttribute("viewName", "redirect:/");
     }
 }

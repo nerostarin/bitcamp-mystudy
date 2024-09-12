@@ -20,18 +20,18 @@ public class BoardViewServlet extends HttpServlet {
         boardService = (BoardService) this.getServletContext().getAttribute("boardService");
     }
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
         try {
             int boardNo = Integer.parseInt(req.getParameter("no"));
             Board board = boardService.get(boardNo);
-            boardService.increaseViewCount(boardNo);
-            req.setAttribute("board", board);
+            if (board == null) {
+                throw new Exception("게시글이 존재하지 않습니다.");
+            }
 
-            res.setContentType("text/html;charset=UTF-8");
-            req.getRequestDispatcher("/board/view.jsp").include(req, res);
+            boardService.increaseViewCount(board.getNo());
+            req.setAttribute("board", board);
+            req.setAttribute("viewName", "/board/view.jsp");
 
         } catch (Exception e) {
             req.setAttribute("exception", e);

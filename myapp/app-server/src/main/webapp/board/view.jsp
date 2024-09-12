@@ -3,8 +3,6 @@
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-<%@ page import="bitcamp.myapp.vo.Board"%>
-<%@ page import="bitcamp.myapp.vo.AttachedFile"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -18,7 +16,7 @@
 </c:if>
 
 <c:if test="${not empty board}">
-<form action='/board/update' method="post" enctype="multipart/form-data">
+<form action='update' method="post" enctype="multipart/form-data">
       번호: <input readonly name='no' type='text' value='${board.no}'><br>
       제목: <input name='title' type='text' value='${board.title}'><br>
       내용: <textarea name='content'>${board.content}</textarea><br>
@@ -32,14 +30,14 @@
 <c:forEach items="${board.attachedFiles}" var="attachedFile">
         <li>
             <a href="/download?path=board&fileNo=${attachedFile.fileNo}">${attachedFile.originFilename}</a>
-            <a href="/board/file/delete?boardNo=${board.no}&fileNo=${attachedFile.fileNo}">[삭제]</a>
+            <a href="file/delete?boardNo=${board.no}&fileNo=${attachedFile.fileNo}">[삭제]</a>
         </li>
 </c:forEach>
       </ul>
 </c:if>
       <input name="files" type="file" multiple><br>
       <button>변경</button>
-      <button type='button' onclick='location.href="/board/delete?no=${board.no}"'>삭제</button>
+      <button type='button' onclick='location.href="delete?no=${board.no}"'>삭제</button>
 </form>
 </c:if>
 

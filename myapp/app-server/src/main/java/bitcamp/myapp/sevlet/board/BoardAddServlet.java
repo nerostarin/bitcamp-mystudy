@@ -1,12 +1,11 @@
 package bitcamp.myapp.sevlet.board;
 
-import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,25 +16,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-@MultipartConfig(
-        maxFileSize = 1024 * 1024 * 60,
-        maxRequestSize = 1024 * 1024 * 100)
 @WebServlet("/board/add")
 public class BoardAddServlet extends HttpServlet {
 
-    private BoardDao boardDao;
+    private BoardService boardService;
     private String uploadDir;
 
     @Override
     public void init() throws ServletException {
-        boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
+        boardService = (BoardService) this.getServletContext().getAttribute("boardService");
         this.uploadDir = this.getServletContext().getRealPath("/upload/board");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-        req.getRequestDispatcher("/user/form.jsp").include(req, res);
+        req.setAttribute("viewName", "/board/form.jsp");
     }
 
     @Override
@@ -69,8 +64,8 @@ public class BoardAddServlet extends HttpServlet {
 
             board.setAttachedFiles(attachedFiles);
 
-
-            res.sendRedirect("/board/list");
+            boardService.add(board);
+            req.setAttribute("viewName", "redirect:list");
 
         } catch (Exception e) {
             req.setAttribute("exception", e);

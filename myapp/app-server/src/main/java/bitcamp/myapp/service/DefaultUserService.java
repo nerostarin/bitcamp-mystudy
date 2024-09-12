@@ -34,6 +34,11 @@ public class DefaultUserService implements UserService {
         return userDao.findBy(userNo);
     }
 
+    @Override
+    public User exists(String email, String password) throws Exception {
+        return userDao.findByEmailAndPassword(email, password);
+    }
+
     public boolean update(User user) throws Exception {
         try {
             boolean result = userDao.update(user);

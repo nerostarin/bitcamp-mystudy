@@ -4,7 +4,6 @@ import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
-import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +17,6 @@ import java.io.IOException;
 public class BoardFileDeleteServlet extends HttpServlet {
 
     private BoardService boardService;
-    private SqlSessionFactory sqlSessionFactory;
     private String uploadDir;
 
     @Override
@@ -60,7 +58,7 @@ public class BoardFileDeleteServlet extends HttpServlet {
             }
 
             boardService.deleteAttachedFile(fileNo);
-            res.sendRedirect("/board/view?no=" + req.getParameter("boardNo"));
+            req.setAttribute("viewName", "redirect:../view?no=" + req.getParameter("boardNo"));
 
         } catch (Exception e) {
             req.setAttribute("exception", e);

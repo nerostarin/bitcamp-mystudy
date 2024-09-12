@@ -11,8 +11,7 @@ import java.io.IOException;
 public class ProjectForm1Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-        req.getRequestDispatcher("/project/form1.jsp").include(req, res);
+        req.setAttribute("viewName", "/project/form1.jsp");
     }
 
 }
