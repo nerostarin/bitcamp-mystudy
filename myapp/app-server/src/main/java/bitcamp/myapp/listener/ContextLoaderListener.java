@@ -1,5 +1,6 @@
 package bitcamp.myapp.listener;
 
+import bitcamp.myapp.controller.*;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.DaoFactory;
 import bitcamp.myapp.dao.ProjectDao;
@@ -17,6 +18,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebListener
 public class ContextLoaderListener implements ServletContextListener {
@@ -45,10 +48,15 @@ public class ContextLoaderListener implements ServletContextListener {
 
 
             ServletContext ctx = sce.getServletContext();
-            ctx.setAttribute("userService", userService);
-            ctx.setAttribute("boardService", boardService);
-            ctx.setAttribute("projectService", projectService);
             ctx.setAttribute("sqlSessionFactory", sqlSessionFactoryProxy);
+
+            List<Object> controllers = new ArrayList<>();
+            controllers.add(new UserController(userService));
+            controllers.add(new AuthController(userService));
+            controllers.add(new ProjectController(projectService, userService));
+            controllers.add(new BoardController(boardService, ctx));
+            controllers.add(new DownloadController(boardService, ctx));
+            ctx.setAttribute("controllers", controllers);
 
         } catch (Exception e) {
             System.out.println("객체 준비중 오류가 발생하였습니다 contextInitialized");
