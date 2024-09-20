@@ -1,14 +1,15 @@
 package bitcamp.myapp.controller;
 
 import bitcamp.myapp.mybatis.annotaion.RequestMapping;
+import bitcamp.myapp.mybatis.annotaion.RequestParam;
 import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.User;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -26,18 +27,18 @@ public class DownloadController extends HttpServlet {
     }
 
     @RequestMapping("/download")
-    public void download(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public void download(@RequestParam("path") String path,
+                         @RequestParam("fileNo") int fileNo,
+                         HttpSession session, HttpServletResponse res) throws Exception {
 
-        User loginUser = (User) req.getSession().getAttribute("loginUser");
+        User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser == null) {
             throw new Exception("로그인 하지 않았습니다.");
         }
 
-        String path = req.getParameter("path");
         String downloadDir = downloadPathMap.get(path);
 
         if (path.equals("board")) {
-            int fileNo = Integer.parseInt(req.getParameter("fileNo"));
             AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
 
             res.setHeader(
