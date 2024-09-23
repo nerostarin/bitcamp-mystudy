@@ -1,18 +1,17 @@
 <%@ page
-    language="java"
-    contentType="text/html;charset=UTF-8"
+    language="java" 
+    contentType="text/html;charset=UTF-8" 
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <jsp:include page="/header.jsp"/>
 
 <h1>프로젝트 조회</h1>
 
 <c:if test="${empty project}">
-<p>없는 프로젝트입니다.</p>
+    <p>없는 프로젝트입니다.</p>
 </c:if>
-
 <c:if test="${not empty project}">
 <form action='update' method="post">
     번호: <input readonly name='no' type='text' value='${project.no}'><br>
@@ -23,7 +22,7 @@
         <input name='endDate' type='date' value='${project.endDate}'><br>
     팀원:<br>
         <ul>
-  <c:forEach items="${users}" var="user">
+        <c:forEach items="${users}" var="user">
           <li><input ${project.members.contains(user) ? "checked" : ""}
                 name='member'
                 value='${user.no}'
@@ -34,7 +33,6 @@
     <button type='button'
             onclick='location.href="delete?no=${project.no}"'>삭제</button>
 </form>
-
 </c:if>
 
 </body>

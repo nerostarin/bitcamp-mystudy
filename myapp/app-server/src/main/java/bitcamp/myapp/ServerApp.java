@@ -16,13 +16,12 @@ public class ServerApp {
             ServerApp app = new ServerApp();
             app.execute();
         } catch (Exception e) {
-            System.out.println("서버 실행중 오류 발생");
+            System.out.println("서버 실행 중 오류 발생!");
             e.printStackTrace();
         }
     }
 
     private void execute() throws Exception {
-
         System.out.println("서버 실행 중...");
 
         // 톰캣 서버를 구동시키는 객체 준비
@@ -39,6 +38,7 @@ public class ServerApp {
         connector.setURIEncoding("UTF-8");
 
         // 톰캣 서버에 배포할 웹 애플리케이션의 환경 정보 준비
+        // => 정적 웹 자원의 경로
         StandardContext ctx = (StandardContext) tomcat.addWebapp(
                 "/", // 컨텍스트 경로(웹 애플리케이션 경로)
                 new File("src/main/webapp").getAbsolutePath() // 웹 애플리케이션 파일이 있는 실제 경로
@@ -49,6 +49,7 @@ public class ServerApp {
         WebResourceRoot resources = new StandardRoot(ctx);
 
         // 웹 애플리케이션의 서블릿 클래스 등록
+        // => 동적 웹 자원의 경로
         resources.addPreResources(new DirResourceSet(
                 resources, // 루트 웹 애플리케이션 정보
                 "/WEB-INF/classes", // 서블릿 클래스 파일의 위치 정보
@@ -66,7 +67,7 @@ public class ServerApp {
         tomcat.getServer().await();
 
         System.out.println("서버 종료!");
-
     }
+
 
 }

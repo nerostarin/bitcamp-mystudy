@@ -1,6 +1,6 @@
 <%@ page
-    language="java"
-    contentType="text/html;charset=UTF-8"
+    language="java" 
+    contentType="text/html;charset=UTF-8" 
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
 
@@ -10,7 +10,7 @@
 <form action='add' method="post" enctype="multipart/form-data">
     제목: <input name='title' type='text'><br>
     내용: <textarea name='content'></textarea><br>
-    첨부파일: <input type='file' name='files' multiple><br>
+    첨부파일: <input name="files" type="file" multiple><br>
     <input type='submit' value='등록'>
 </form>
 
