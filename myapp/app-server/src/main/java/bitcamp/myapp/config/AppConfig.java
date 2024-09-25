@@ -1,6 +1,5 @@
 package bitcamp.myapp.config;
 
-import bitcamp.myapp.annotation.Bean;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.DaoFactory;
 import bitcamp.myapp.dao.ProjectDao;
@@ -9,12 +8,23 @@ import bitcamp.mybatis.SqlSessionFactoryProxy;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import java.io.InputStream;
 
+@ComponentScan("bitcamp.myapp")
 public class AppConfig {
+
     @Bean
-    public SqlSessionFactory createSqlSessionFactory() throws Exception {
+    public MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
         InputStream inputStream = Resources.getResourceAsStream("config/mybatis-config.xml");
         SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
         SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
@@ -23,22 +33,22 @@ public class AppConfig {
     }
 
     @Bean
-    public DaoFactory createDaoFactory(SqlSessionFactory sqlSessionFactory) throws Exception {
+    public DaoFactory daoFactory(SqlSessionFactory sqlSessionFactory) throws Exception {
         return new DaoFactory(sqlSessionFactory);
     }
 
     @Bean
-    public UserDao createUserDao(DaoFactory daoFactory) throws Exception {
+    public UserDao userDao(DaoFactory daoFactory) throws Exception {
         return daoFactory.createObject(UserDao.class);
     }
 
     @Bean
-    public BoardDao createBoardDao(DaoFactory daoFactory) throws Exception {
+    public BoardDao boardDao(DaoFactory daoFactory) throws Exception {
         return daoFactory.createObject(BoardDao.class);
     }
 
     @Bean
-    public ProjectDao createProjectDao(DaoFactory daoFactory) throws Exception {
+    public ProjectDao projectDao(DaoFactory daoFactory) throws Exception {
         return daoFactory.createObject(ProjectDao.class);
     }
 }
