@@ -20,8 +20,7 @@ public class AuthController {
     }
 
     @GetMapping("/auth/form")
-    public String form() {
-        return "/auth/form.jsp";
+    public void form() {
     }
 
     @PostMapping("/auth/login")
@@ -34,8 +33,8 @@ public class AuthController {
 
         User user = userService.exists(email, password);
         if (user == null) {
-            res.setHeader("Refresh", "2; url=login");
-            return "/auth/fail.jsp";
+            res.setHeader("Refresh", "2; url=form");
+            return "auth/fail";
         }
 
         if (saveEmail) {

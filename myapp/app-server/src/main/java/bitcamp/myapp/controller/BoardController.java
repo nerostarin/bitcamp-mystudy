@@ -5,6 +5,7 @@ import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +31,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/form")
-    public String form() {
-        return "/board/form.jsp";
+    public void form() {
     }
 
     @PostMapping("/board/add")
@@ -69,16 +69,13 @@ public class BoardController {
     }
 
     @GetMapping("/board/list")
-    public ModelAndView list() throws Exception {
+    public void list(Model model) throws Exception {
         List<Board> list = boardService.list();
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("list", list);
-        mv.setViewName("/board/list.jsp");
-        return mv;
+        model.addAttribute("list", list);
     }
 
     @GetMapping("/board/view")
-    public ModelAndView view(int no) throws Exception {
+    public void view(int no, Model model) throws Exception {
         ModelAndView mv = new ModelAndView();
         Board board = boardService.get(no);
         if (board == null) {
@@ -86,9 +83,7 @@ public class BoardController {
         }
 
         boardService.increaseViewCount(board.getNo());
-        mv.addObject("board", board);
-        mv.setViewName("/board/view.jsp");
-        return mv;
+        model.addAttribute("board", board);
     }
 
     @PostMapping("/board/update")

@@ -29,7 +29,7 @@ public class ProjectController {
 
     @GetMapping("/project/form1")
     public String form1() {
-        return "/project/form1.jsp";
+        return "project/form1";
     }
 
     @PostMapping("/project/form2")
@@ -38,7 +38,7 @@ public class ProjectController {
         List<User> users = userService.list();
         mv.addObject("project", project);
         mv.addObject("users", users);
-        mv.setViewName("/project/form2.jsp");
+        mv.setViewName("project/form2");
         return mv;
     }
 
@@ -56,7 +56,7 @@ public class ProjectController {
             project.setMembers(members);
         }
 
-        return "/project/form3.jsp";
+        return "project/form3";
     }
 
     @PostMapping("/project/add")
@@ -71,7 +71,7 @@ public class ProjectController {
         ModelAndView mv = new ModelAndView();
         List<Project> list = projectService.list();
         mv.addObject("list", list);
-        mv.setViewName("/project/list.jsp");
+        mv.setViewName("project/list");
         return mv;
     }
 
@@ -83,7 +83,7 @@ public class ProjectController {
 
         List<User> users = userService.list();
         mv.addObject("user", users);
-        mv.setViewName("/project/view.jsp");
+        mv.setViewName("project/view");
         return mv;
     }
 
