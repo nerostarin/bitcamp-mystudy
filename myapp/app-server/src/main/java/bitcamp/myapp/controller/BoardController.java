@@ -58,7 +58,6 @@ public class BoardController {
             attachedFile.setOriginFilename(file.getOriginalFilename());
 
             file.transferTo(new File(this.uploadDir + "/" + attachedFile.getFilename()));
-
             attachedFiles.add(attachedFile);
         }
 

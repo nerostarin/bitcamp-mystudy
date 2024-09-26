@@ -45,6 +45,14 @@ public class ContextLoaderListener implements ServletContextListener {
 
             //필터 객체 생성
             CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter("UTF-8");
+//
+//            //현재 IoC 컨테이너에 들어 있는 빈(자가객체)을 조히
+//            System.out.println("빈 개수" + iocContainer.getBeanDefinitionCount());
+//            String[] beanNames = iocContainer.getBeanDefinitionNames();
+//            for (String beaname : beanNames) {
+//                Object bean = iocContainer.getBean(beaname);
+//                System.out.println(beaname + "==>" + bean.getClass().getCanonicalName());
+//            }
 
             // 필터 객체를 서블릿 컨테이너에 등록
             FilterRegistration.Dynamic filterRegistration = ctx.addFilter("characterEncodingFilter", characterEncodingFilter);

@@ -2,12 +2,12 @@ package bitcamp.myapp.service;
 
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
 public class DefaultProjectService implements ProjectService {
 
     private ProjectDao projectDao;
