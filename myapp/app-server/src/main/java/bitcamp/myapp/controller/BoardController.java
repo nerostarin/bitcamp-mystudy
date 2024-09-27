@@ -4,12 +4,20 @@ import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -24,10 +32,25 @@ public class BoardController {
 
     private BoardService boardService;
     private String uploadDir;
+    private AmazonS3 s3;
+    @Value("${ncp.storage.bucketname}")
+    private String bucketName;
 
-    public BoardController(BoardService boardService, ServletContext ctx) {
+    private String folderName = "board/";
+
+    public BoardController(BoardService boardService,
+                           ServletContext ctx,
+                           @Value("${ncp.storage.endpoint}") String endPoint,
+                           @Value("${ncp.storage.regionname}") String regionName,
+                           @Value("${ncp.accesskey}") String accessKey,
+                           @Value("${ncp.secretkey}") String secretKey) {
         this.boardService = boardService;
         this.uploadDir = ctx.getRealPath("/upload/board");
+
+        s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                .build();
     }
 
     @GetMapping("/board/form")
@@ -35,10 +58,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/add")
-    public String add(
-            Board board,
-            MultipartFile[] files,
-            HttpSession session) throws Exception {
+    public String add(Board board, MultipartFile[] files, HttpSession session) throws Exception {
 
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser == null) {
@@ -57,7 +77,27 @@ public class BoardController {
             attachedFile.setFilename(UUID.randomUUID().toString());
             attachedFile.setOriginFilename(file.getOriginalFilename());
 
-            file.transferTo(new File(this.uploadDir + "/" + attachedFile.getFilename()));
+
+            // 첨부파일을 Object Storage에 올린다.
+            try {
+                // Object Storage에 업로드할 콘텐츠의 요청 정보를 준비함
+                ObjectMetadata objectMetadata = new ObjectMetadata();
+                objectMetadata.setContentType(file.getContentType()); // 콘텐츠의 MIME Type 정보를 설정함
+
+                PutObjectRequest putObjectRequest = new PutObjectRequest(
+                        bucketName, // 업로드할 버킷 이름
+                        folderName + attachedFile.getFilename(), // 업로드 파일의 경로(폴더 경로 포함)
+                        file.getInputStream(), // 업로드 파일 데이터를 읽어들일 입력 스트림
+                        objectMetadata // 업로드 파일의 부가 정보
+                ).withCannedAcl(CannedAccessControlList.PublicRead);
+
+                s3.putObject(putObjectRequest);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
+
             attachedFiles.add(attachedFile);
         }
 
@@ -75,7 +115,6 @@ public class BoardController {
 
     @GetMapping("/board/view")
     public void view(int no, Model model) throws Exception {
-        ModelAndView mv = new ModelAndView();
         Board board = boardService.get(no);
         if (board == null) {
             throw new Exception("게시글이 존재하지 않습니다.");
@@ -86,12 +125,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/update")
-    public String update(
-            int no,
-            String title,
-            String content,
-            Part[] files,
-            HttpSession session) throws Exception {
+    public String update(int no, String title, String content, Part[] files, HttpSession session) throws Exception {
 
         User loginUser = (User) session.getAttribute("loginUser");
 
@@ -128,9 +162,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/delete")
-    public String delete(
-            int no,
-            HttpSession session) throws Exception {
+    public String delete(int no, HttpSession session) throws Exception {
 
         User loginUser = (User) session.getAttribute("loginUser");
         Board board = boardService.get(no);
@@ -153,10 +185,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/file/delete")
-    public String fileDelete(
-            HttpSession session,
-            int fileNo,
-            int boardNo) throws Exception {
+    public String fileDelete(HttpSession session, int fileNo, int boardNo) throws Exception {
 
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser == null) {
