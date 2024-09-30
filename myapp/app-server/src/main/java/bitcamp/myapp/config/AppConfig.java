@@ -31,6 +31,8 @@ public class AppConfig {
     ApplicationContext appCtx;
 
     public AppConfig(ApplicationContext appCtx) {
+        //AWS 에러 메세지 없애는거
+        System.setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
         this.appCtx = appCtx;
     }
 
