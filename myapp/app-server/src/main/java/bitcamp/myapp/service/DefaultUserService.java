@@ -16,7 +16,7 @@ public class DefaultUserService implements UserService {
         this.userDao = userDao;
     }
 
-    @Transactional
+    @Transactional()
     public void add(User user) throws Exception {
         userDao.insert(user);
 
@@ -42,7 +42,6 @@ public class DefaultUserService implements UserService {
         } else {
             return false;
         }
-
     }
 
     @Transactional
@@ -52,6 +51,5 @@ public class DefaultUserService implements UserService {
         } else {
             return false;
         }
-
     }
 }
