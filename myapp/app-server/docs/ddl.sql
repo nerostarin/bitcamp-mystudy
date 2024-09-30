@@ -67,6 +67,8 @@ alter table myapp_project_members
   add constraint primary key (user_id, project_id);
 
 
+alter table myapp_users
+    add column photo varchar(100);
 
 
 

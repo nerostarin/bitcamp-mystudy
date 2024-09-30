@@ -15,6 +15,7 @@
 
 <c:if test="${not empty user}">
     <form action='update' method="post">
+    <img src = "https://kr.object.ncloudstorage.com/bitcamp-bucket104/user/${user.photo}"><br>
         번호: <input name='no' readonly type='text' value='${user.no}'><br>
         이름: <input name='name' type='text' value='${user.name}'><br>
         이메일: <input name='email' type='email' value='${user.email}'><br>
