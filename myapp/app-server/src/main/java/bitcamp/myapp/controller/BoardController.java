@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,16 +22,13 @@ import java.util.UUID;
 public class BoardController {
 
     private BoardService boardService;
-    private String uploadDir;
     private StorageService storageService;
 
     private String folderName = "board/";
 
     public BoardController(BoardService boardService,
-                           ServletContext ctx,
                            StorageService storageService) {
         this.boardService = boardService;
-        this.uploadDir = ctx.getRealPath("/upload/board");
         this.storageService = storageService;
     }
 
@@ -119,7 +114,11 @@ public class BoardController {
             attachedFile.setFilename(UUID.randomUUID().toString());
             attachedFile.setOriginFilename(part.getSubmittedFileName());
 
-            part.write(this.uploadDir + "/" + attachedFile.getFilename());
+            HashMap<String, Object> options = new HashMap<>();
+            options.put(StorageService.CONTENT_TYPE, part.getContentType());
+            storageService.upload(
+                    folderName + attachedFile.getFilename(),
+                    part.getInputStream(), options);
 
             attachedFiles.add(attachedFile);
         }
@@ -142,10 +141,12 @@ public class BoardController {
             throw new Exception("삭제 권한이 없습니다.");
         }
 
+        //게시글 삭제할때도 파일삭제 해야한다
         for (AttachedFile attachedFile : board.getAttachedFiles()) {
-            File file = new File(uploadDir + "/" + attachedFile.getFilename());
-            if (file.exists()) {
-                file.delete();
+            try {
+                storageService.delete(folderName + attachedFile.getFilename());
+            } catch (Exception e) {
+                System.out.printf("%s 파일 삭제 실패\n", folderName + attachedFile.getFilename());
             }
         }
 
