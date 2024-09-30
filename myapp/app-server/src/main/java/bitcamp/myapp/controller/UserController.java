@@ -61,7 +61,23 @@ public class UserController {
     }
 
     @PostMapping("/user/update")
-    public String update(User user) throws Exception {
+    public String update(User user, MultipartFile file) throws Exception {
+
+        User old = userService.get(user.getNo());
+
+        if (file != null && file.getSize() > 0) {
+            storageService.delete(folderName + old.getPhoto());
+
+            String fileName = UUID.randomUUID().toString();
+            HashMap<String, Object> options = new HashMap<>();
+            options.put(StorageService.CONTENT_TYPE, file.getContentType());
+            storageService.upload(
+                    folderName + fileName,
+                    file.getInputStream(), options);
+            user.setPhoto(fileName);//디비에 저장할때 사용할 사진 파일 이름 설정
+        } else {
+            user.setPhoto(old.getPhoto());
+        }
         if (userService.update(user)) {
             return "redirect:list";
         } else {
