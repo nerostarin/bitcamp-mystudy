@@ -5,10 +5,7 @@ import bitcamp.myapp.service.UserService;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +14,7 @@ import java.util.List;
 
 @Controller
 @SessionAttributes("project")//프로젝트에 모델이나 이런곳에 저장이되면 세션에도 저장시키게해주는 아이이다
+@RequestMapping("/project")
 public class ProjectController {
 
     private ProjectService projectService;
@@ -27,12 +25,12 @@ public class ProjectController {
         this.userService = userService;
     }
 
-    @GetMapping("/project/form1")
+    @GetMapping("/form1")
     public String form1() {
         return "project/form1";
     }
 
-    @PostMapping("/project/form2")
+    @PostMapping("/form2")
     public ModelAndView form2(Project project) throws Exception {
         ModelAndView mv = new ModelAndView();
         List<User> users = userService.list();
@@ -42,7 +40,7 @@ public class ProjectController {
         return mv;
     }
 
-    @PostMapping("/project/form3")
+    @PostMapping("/form3")
     public String form3(
             int[] memberNos,
             @ModelAttribute Project project) throws Exception {
@@ -59,14 +57,14 @@ public class ProjectController {
         return "project/form3";
     }
 
-    @PostMapping("/project/add")
+    @PostMapping("/add")
     public String add(@ModelAttribute Project project, SessionStatus sessionStatus) throws Exception {
         projectService.add(project);
         sessionStatus.setComplete();
         return "redirect:list";
     }
 
-    @GetMapping("/project/list")
+    @GetMapping("/list")
     public ModelAndView list() throws Exception {
         ModelAndView mv = new ModelAndView();
         List<Project> list = projectService.list();
@@ -75,7 +73,7 @@ public class ProjectController {
         return mv;
     }
 
-    @GetMapping("/project/view")
+    @GetMapping("/view")
     public ModelAndView view(int no) throws Exception {
         ModelAndView mv = new ModelAndView();
         Project project = projectService.get(no);
@@ -87,7 +85,7 @@ public class ProjectController {
         return mv;
     }
 
-    @PostMapping("/project/update")
+    @PostMapping("/update")
     public String update(
             Project project,
             int[] memberNos) throws Exception {
@@ -106,7 +104,7 @@ public class ProjectController {
         return "redirect:list";
     }
 
-    @GetMapping("/project/delete")
+    @GetMapping("/delete")
     public String delete(int no) throws Exception {
         if (projectService.delete(no)) {
             return "redirect:list";
