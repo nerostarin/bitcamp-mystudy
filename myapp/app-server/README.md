@@ -1,13 +1,12 @@
-# 60. 페이지 컨트롤러 자동 생성하기 - IoC 컨테이너 만들기
+# 65. SpringBoot(2.7.x) 적용하기
 
 ## 학습목표
 
-- Reflection API를 사용하여 클래스를 찾아서 인스턴스를 자동 생성할 수 있다.
-- Spring IoC 컨테이너의 구동 원리를 이해하고 설명할 수 있다.
+- Spring Boot를 프로젝트에 적용하고 설정할 수 있다.
 
 ## 요구사항
 
-- 페이지 컨트롤러를 직접 생성하지 말고 @Controller 애노테이션이 붙은 클래스의 인스턴스를 자동 생성하라.
+- 기존의 Spring Framework 프로젝트를 Spring Boot 환경으로 설정하라.
 
 ## 실행 결과
 
@@ -15,24 +14,9 @@
 
 ## 작업
 
-### 1 단계: 페이지 컨트롤러 객체 자동 생성 하기
-- 애노테이션 정의 
-  - Controller 애노테이션 생성
-- 페이지 컨트롤러에 애노테이션 적용
-  - XxxController 클래스 변경
-- @Controller 애노테이션이 붙은 클래스를 찾아 인스턴스를 자동으로 생성
-  - ContextLoaderListener 클래스 변경
-  
-### 2단계: 객체 생성 기능을 별도의 클래스로 분리하기
-
-- IoC 컨테이너 추가
-  - ApplicationContext 클래스 생성
-  - ContextLoaderListener가 하던 객체 생성 일을 가져온다.
-
-### 3단계: 객체 생성을 해주는 팩토리 메서드 호출을 자동화하기
-
-- 팩토리 메서드 표시할 때 사용할 애노테이션 정의
-  - Bean 애노테이션 생성
+- build.gradle 파일 변경
+- src/main/resources/application.properties 파일 생성
+- 설정에 따라 기타 파일을 변경하거나 삭제
 
 ## 소스 파일
 

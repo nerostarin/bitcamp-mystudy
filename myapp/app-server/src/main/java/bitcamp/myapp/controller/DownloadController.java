@@ -14,37 +14,37 @@ import java.io.OutputStream;
 @Controller
 public class DownloadController {
 
-    private BoardService boardService;
-    private StorageService storageService;
+  private BoardService boardService;
+  private StorageService storageService;
 
-    public DownloadController(BoardService boardService, StorageService storageService) {
-        this.boardService = boardService;
-        this.storageService = storageService;
+  public DownloadController(BoardService boardService, StorageService storageService) {
+    this.boardService = boardService;
+    this.storageService = storageService;
+  }
+
+  @GetMapping("/download")
+  public HttpHeaders download(
+          String path,
+          int fileNo,
+          HttpSession session,
+          OutputStream out) throws Exception {
+
+    HttpHeaders headers = new HttpHeaders();
+
+    User loginUser = (User) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인 하지 않았습니다.");
     }
 
-    @GetMapping("/download")
-    public HttpHeaders download(
-            String path,
-            int fileNo,
-            HttpSession session,
-            OutputStream out) throws Exception {
+    AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
 
-        HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Disposition",
+            String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
+    );
 
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new Exception("로그인 하지 않았습니다.");
-        }
+    storageService.download(path + "/" + attachedFile.getFilename(), out);
 
-        AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
-
-        headers.add("Content-Disposition",
-                String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
-        );
-
-        storageService.download(path + "/" + attachedFile.getFilename(), out);
-
-        return headers;
-    }
+    return headers;
+  }
 
 }

@@ -23,163 +23,182 @@ import java.util.UUID;
 @RequestMapping("/board")
 public class BoardController {
 
-    private BoardService boardService;
-    private StorageService storageService;
+  private BoardService boardService;
+  private StorageService storageService;
 
-    private String folderName = "board/";
+  private String folderName = "board/";
 
-    public BoardController(BoardService boardService,
-                           StorageService storageService) {
-        this.boardService = boardService;
-        this.storageService = storageService;
+  public BoardController(
+          BoardService boardService,
+          StorageService storageService) {
+    this.boardService = boardService;
+    this.storageService = storageService;
+  }
+
+  @GetMapping("form")
+  public void form() {
+  }
+
+  @PostMapping("add")
+  public String add(
+          Board board,
+          MultipartFile[] files,
+          HttpSession session) throws Exception {
+
+    User loginUser = (User) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인 하지 않았습니다.");
     }
 
-    @GetMapping("/form")
-    public void form() {
+    board.setWriter(loginUser);
+
+    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+
+    for (MultipartFile file : files) {
+      if (file.getSize() == 0) {
+        continue;
+      }
+
+      AttachedFile attachedFile = new AttachedFile();
+      attachedFile.setFilename(UUID.randomUUID().toString());
+      attachedFile.setOriginFilename(file.getOriginalFilename());
+
+      // 첨부 파일을 Object Storage에 올린다.
+      HashMap<String, Object> options = new HashMap<>();
+      options.put(StorageService.CONTENT_TYPE, file.getContentType());
+      storageService.upload(folderName + attachedFile.getFilename(),
+              file.getInputStream(),
+              options);
+
+      attachedFiles.add(attachedFile);
     }
 
-    @PostMapping("/add")
-    public String add(Board board, MultipartFile[] files, HttpSession session) throws Exception {
+    board.setAttachedFiles(attachedFiles);
 
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new Exception("로그인 하지 않았습니다.");
-        }
+    boardService.add(board);
+    return "redirect:list";
+  }
 
-        board.setWriter(loginUser);
+  @GetMapping("list")
+  public void list(Model model) throws Exception {
+    List<Board> list = boardService.list();
+    model.addAttribute("list", list);
+  }
 
-        ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
-        for (MultipartFile file : files) {
-            if (file.getSize() == 0) {
-                continue;
-            }
-
-            AttachedFile attachedFile = new AttachedFile();
-            attachedFile.setFilename(UUID.randomUUID().toString());
-            attachedFile.setOriginFilename(file.getOriginalFilename());
-            HashMap<String, Object> options = new HashMap<>();
-            options.put(StorageService.CONTENT_TYPE, file.getContentType());
-            storageService.upload(
-                    folderName + attachedFile.getFilename(),
-                    file.getInputStream(), options);
-
-
-            attachedFiles.add(attachedFile);
-        }
-
-        board.setAttachedFiles(attachedFiles);
-
-        boardService.add(board);
-        return "redirect:list";
+  @GetMapping("view")
+  public void view(int no, Model model) throws Exception {
+    Board board = boardService.get(no);
+    if (board == null) {
+      throw new Exception("게시글이 존재하지 않습니다.");
     }
 
-    @GetMapping("/list")
-    public void list(Model model) throws Exception {
-        List<Board> list = boardService.list();
-        model.addAttribute("list", list);
+    boardService.increaseViewCount(board.getNo());
+
+    model.addAttribute("board", board);
+  }
+
+  @PostMapping("update")
+  public String update(
+          int no,
+          String title,
+          String content,
+          Part[] files,
+          HttpSession session) throws Exception {
+
+    User loginUser = (User) session.getAttribute("loginUser");
+
+    Board board = boardService.get(no);
+    if (board == null) {
+      throw new Exception("없는 게시글입니다.");
+    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+      throw new Exception("변경 권한이 없습니다.");
     }
 
-    @GetMapping("/view")
-    public void view(int no, Model model) throws Exception {
-        Board board = boardService.get(no);
-        if (board == null) {
-            throw new Exception("게시글이 존재하지 않습니다.");
-        }
+    board.setTitle(title);
+    board.setContent(content);
 
-        boardService.increaseViewCount(board.getNo());
-        model.addAttribute("board", board);
+    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+
+    for (Part part : files) {
+      if (part.getSize() == 0) {
+        continue;
+      }
+
+      AttachedFile attachedFile = new AttachedFile();
+      attachedFile.setFilename(UUID.randomUUID().toString());
+      attachedFile.setOriginFilename(part.getSubmittedFileName());
+
+      // 첨부 파일을 Object Storage에 올린다.
+      HashMap<String, Object> options = new HashMap<>();
+      options.put(StorageService.CONTENT_TYPE, part.getContentType());
+      storageService.upload(folderName + attachedFile.getFilename(),
+              part.getInputStream(),
+              options);
+
+      attachedFiles.add(attachedFile);
     }
 
-    @PostMapping("/update")
-    public String update(int no, String title, String content, Part[] files, HttpSession session) throws Exception {
+    board.setAttachedFiles(attachedFiles);
 
-        User loginUser = (User) session.getAttribute("loginUser");
+    boardService.update(board);
+    return "redirect:list";
+  }
 
-        Board board = boardService.get(no);
-        if (board == null) {
-            throw new Exception("없는 게시글입니다.");
-        } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-            throw new Exception("변경 권한이 없습니다.");
-        }
+  @GetMapping("delete")
+  public String delete(
+          int no,
+          HttpSession session) throws Exception {
 
-        board.setTitle(title);
-        board.setContent(content);
+    User loginUser = (User) session.getAttribute("loginUser");
+    Board board = boardService.get(no);
 
-        ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
-
-        for (Part part : files) {
-            if (part.getSize() == 0) {
-                continue;
-            }
-
-            AttachedFile attachedFile = new AttachedFile();
-            attachedFile.setFilename(UUID.randomUUID().toString());
-            attachedFile.setOriginFilename(part.getSubmittedFileName());
-
-            HashMap<String, Object> options = new HashMap<>();
-            options.put(StorageService.CONTENT_TYPE, part.getContentType());
-            storageService.upload(
-                    folderName + attachedFile.getFilename(),
-                    part.getInputStream(), options);
-
-            attachedFiles.add(attachedFile);
-        }
-
-        board.setAttachedFiles(attachedFiles);
-
-        boardService.update(board);
-        return "redirect:list";
+    if (board == null) {
+      throw new Exception("없는 게시글입니다.");
+    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+      throw new Exception("삭제 권한이 없습니다.");
     }
 
-    @GetMapping("/delete")
-    public String delete(int no, HttpSession session) throws Exception {
-
-        User loginUser = (User) session.getAttribute("loginUser");
-        Board board = boardService.get(no);
-
-        if (board == null) {
-            throw new Exception("없는 게시글입니다.");
-        } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-            throw new Exception("삭제 권한이 없습니다.");
-        }
-
-        //게시글 삭제할때도 파일삭제 해야한다
-        for (AttachedFile attachedFile : board.getAttachedFiles()) {
-            try {
-                storageService.delete(folderName + attachedFile.getFilename());
-            } catch (Exception e) {
-                System.out.printf("%s 파일 삭제 실패\n", folderName + attachedFile.getFilename());
-            }
-        }
-
-        boardService.delete(no);
-        return "redirect:list";
+    for (AttachedFile attachedFile : board.getAttachedFiles()) {
+      try {
+        storageService.delete(folderName + attachedFile.getFilename());
+      } catch (Exception e) {
+        System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
+      }
     }
 
-    @GetMapping("/file/delete")
-    public String fileDelete(HttpSession session, int fileNo, int boardNo) throws Exception {
+    boardService.delete(no);
+    return "redirect:list";
+  }
 
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new Exception("로그인 하지 않았습니다.");
-        }
+  @GetMapping("file/delete")
+  public String fileDelete(
+          HttpSession session,
+          int fileNo,
+          int boardNo) throws Exception {
 
-        AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
-        if (attachedFile == null) {
-            throw new Exception("없는 첨부파일입니다.");
-        }
-
-        Board board = boardService.get(attachedFile.getBoardNo());
-        if (loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-            throw new Exception("삭제 권한이 없습니다.");
-        }
-        try {
-            storageService.delete(folderName + attachedFile.getFilename());
-        } catch (Exception e) {
-            System.out.printf("%s 파일 삭제 실패\n", folderName + attachedFile.getFilename());
-        }
-        boardService.deleteAttachedFile(fileNo);
-        return "redirect:../view?no=" + boardNo;
+    User loginUser = (User) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인 하지 않았습니다.");
     }
+
+    AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
+    if (attachedFile == null) {
+      throw new Exception("없는 첨부파일입니다.");
+    }
+
+    Board board = boardService.get(attachedFile.getBoardNo());
+    if (loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+      throw new Exception("삭제 권한이 없습니다.");
+    }
+
+    try {
+      storageService.delete(folderName + attachedFile.getFilename());
+    } catch (Exception e) {
+      System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
+    }
+
+    boardService.deleteAttachedFile(fileNo);
+    return "redirect:../view?no=" + boardNo;
+  }
 
 }

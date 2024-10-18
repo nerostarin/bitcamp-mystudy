@@ -16,6 +16,9 @@ alter table myapp_users
   modify column user_id int not null auto_increment,
   add constraint myapp_users_uk unique (email);
 
+alter table myapp_users
+    add column photo varchar(100);
+
 create table myapp_boards (
   board_id int not null,
   title varchar(255) not null,
@@ -67,8 +70,6 @@ alter table myapp_project_members
   add constraint primary key (user_id, project_id);
 
 
-alter table myapp_users
-    add column photo varchar(100);
 
 
 

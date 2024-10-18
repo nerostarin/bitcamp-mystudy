@@ -15,9 +15,9 @@
 
 <c:if test="${not empty user}">
     <form method="post" enctype="multipart/form-data">
-    <a src = "https://kr.object.ncloudstorage.com/bitcamp-bucket104/user/${user.photo == null ? 'default.PNG' : user.photo}">
-    <img src = "https://drs3nrdx4943.edge.naverncp.com/JtkWWoqQmg/user/${user.photo == null ? 'default.PNG' : user.photo}?type=f&w=100&h=100">
-    </a><input name="file" type="file"><br>
+        <a href="https://kr.object.ncloudstorage.com/bitcamp-bucket118/user/${user.photo == null ? 'default.png' : user.photo}">
+            <img src="https://p2zqyggq4939.edge.naverncp.com/UZxHbepmRn/user/${user.photo == null ? 'default.png' : user.photo}?type=f&w=100&h=100">
+        </a><input name="file" type="file"><br>
         번호: <input readonly type='text' value='${user.no}'><br>
         이름: <input name='name' type='text' value='${user.name}'><br>
         이메일: <input name='email' type='email' value='${user.email}'><br>
@@ -30,16 +30,14 @@
 
 <script>
 function deleteUser(no) {
-    console.log("삭제 실행");
+    console.log("삭제 실행!");
     const xhr = new XMLHttpRequest();
-
     xhr.open("DELETE", location.href, true);
-
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
-           location.href="../users"
-        } else {
-            window.alert("삭제 실패입니다");
+            location.href = "../users";
+        } else {  // 오류가 발생했을 때
+            window.alert("삭제 실패입니다!");
         }
     };
     xhr.send();
