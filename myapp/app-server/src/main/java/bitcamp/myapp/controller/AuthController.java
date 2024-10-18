@@ -21,11 +21,11 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("/form")
+    @GetMapping("form")
     public void form() {
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public String login(
             String email,
             String password,
@@ -53,7 +53,7 @@ public class AuthController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+    @GetMapping("logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
