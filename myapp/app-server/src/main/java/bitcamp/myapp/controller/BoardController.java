@@ -5,11 +5,13 @@ import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -21,184 +23,200 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class BoardController {
 
-  private BoardService boardService;
-  private StorageService storageService;
+    private final BoardService boardService;
+    private final StorageService storageService;
 
-  private String folderName = "board/";
+    private String folderName = "board/";
 
-  public BoardController(
-          BoardService boardService,
-          StorageService storageService) {
-    this.boardService = boardService;
-    this.storageService = storageService;
-  }
-
-  @GetMapping("form")
-  public void form() {
-  }
-
-  @PostMapping("add")
-  public String add(
-          Board board,
-          MultipartFile[] files,
-          HttpSession session) throws Exception {
-
-    User loginUser = (User) session.getAttribute("loginUser");
-    if (loginUser == null) {
-      throw new Exception("로그인 하지 않았습니다.");
+    @GetMapping("form")
+    public void form() {
     }
 
-    board.setWriter(loginUser);
+    @PostMapping("add")
+    public String add(
+            Board board,
+            MultipartFile[] files,
+            HttpSession session) throws Exception {
 
-    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+        User loginUser = (User) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new Exception("로그인 하지 않았습니다.");
+        }
 
-    for (MultipartFile file : files) {
-      if (file.getSize() == 0) {
-        continue;
-      }
+        board.setWriter(loginUser);
 
-      AttachedFile attachedFile = new AttachedFile();
-      attachedFile.setFilename(UUID.randomUUID().toString());
-      attachedFile.setOriginFilename(file.getOriginalFilename());
+        ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
 
-      // 첨부 파일을 Object Storage에 올린다.
-      HashMap<String, Object> options = new HashMap<>();
-      options.put(StorageService.CONTENT_TYPE, file.getContentType());
-      storageService.upload(folderName + attachedFile.getFilename(),
-              file.getInputStream(),
-              options);
+        for (MultipartFile file : files) {
+            if (file.getSize() == 0) {
+                continue;
+            }
 
-      attachedFiles.add(attachedFile);
+            AttachedFile attachedFile = new AttachedFile();
+            attachedFile.setFilename(UUID.randomUUID().toString());
+            attachedFile.setOriginFilename(file.getOriginalFilename());
+
+            // 첨부 파일을 Object Storage에 올린다.
+            HashMap<String, Object> options = new HashMap<>();
+            options.put(StorageService.CONTENT_TYPE, file.getContentType());
+            storageService.upload(folderName + attachedFile.getFilename(),
+                    file.getInputStream(),
+                    options);
+
+            attachedFiles.add(attachedFile);
+        }
+
+        board.setAttachedFiles(attachedFiles);
+
+        boardService.add(board);
+        return "redirect:list";
     }
 
-    board.setAttachedFiles(attachedFiles);
+    @GetMapping("list")
+    public void list(
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "3") int pageSize,
+            Model model) throws Exception {
 
-    boardService.add(board);
-    return "redirect:list";
-  }
+        if (pageNo < 1) {
+            pageNo = 1;
+        }
 
-  @GetMapping("list")
-  public void list(Model model) throws Exception {
-    List<Board> list = boardService.list();
-    model.addAttribute("list", list);
-  }
+        int length = boardService.countAll();
 
-  @GetMapping("view")
-  public void view(int no, Model model) throws Exception {
-    Board board = boardService.get(no);
-    if (board == null) {
-      throw new Exception("게시글이 존재하지 않습니다.");
+        int pageCount = length / pageSize;
+        if (length % pageSize > 0) {
+            pageCount++;
+        }
+
+        if (pageNo > pageCount) {
+            pageNo = pageCount;
+        }
+
+        List<Board> list = boardService.list(pageNo, pageSize);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNo", pageNo);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageCount", pageCount);
     }
 
-    boardService.increaseViewCount(board.getNo());
+    @GetMapping("view")
+    public void view(int no, Model model) throws Exception {
+        Board board = boardService.get(no);
+        if (board == null) {
+            throw new Exception("게시글이 존재하지 않습니다.");
+        }
 
-    model.addAttribute("board", board);
-  }
+        boardService.increaseViewCount(board.getNo());
 
-  @PostMapping("update")
-  public String update(
-          int no,
-          String title,
-          String content,
-          Part[] files,
-          HttpSession session) throws Exception {
-
-    User loginUser = (User) session.getAttribute("loginUser");
-
-    Board board = boardService.get(no);
-    if (board == null) {
-      throw new Exception("없는 게시글입니다.");
-    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-      throw new Exception("변경 권한이 없습니다.");
+        model.addAttribute("board", board);
     }
 
-    board.setTitle(title);
-    board.setContent(content);
+    @PostMapping("update")
+    public String update(
+            int no,
+            String title,
+            String content,
+            Part[] files,
+            HttpSession session) throws Exception {
 
-    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+        User loginUser = (User) session.getAttribute("loginUser");
 
-    for (Part part : files) {
-      if (part.getSize() == 0) {
-        continue;
-      }
+        Board board = boardService.get(no);
+        if (board == null) {
+            throw new Exception("없는 게시글입니다.");
+        } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+            throw new Exception("변경 권한이 없습니다.");
+        }
 
-      AttachedFile attachedFile = new AttachedFile();
-      attachedFile.setFilename(UUID.randomUUID().toString());
-      attachedFile.setOriginFilename(part.getSubmittedFileName());
+        board.setTitle(title);
+        board.setContent(content);
 
-      // 첨부 파일을 Object Storage에 올린다.
-      HashMap<String, Object> options = new HashMap<>();
-      options.put(StorageService.CONTENT_TYPE, part.getContentType());
-      storageService.upload(folderName + attachedFile.getFilename(),
-              part.getInputStream(),
-              options);
+        ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
 
-      attachedFiles.add(attachedFile);
+        for (Part part : files) {
+            if (part.getSize() == 0) {
+                continue;
+            }
+
+            AttachedFile attachedFile = new AttachedFile();
+            attachedFile.setFilename(UUID.randomUUID().toString());
+            attachedFile.setOriginFilename(part.getSubmittedFileName());
+
+            // 첨부 파일을 Object Storage에 올린다.
+            HashMap<String, Object> options = new HashMap<>();
+            options.put(StorageService.CONTENT_TYPE, part.getContentType());
+            storageService.upload(folderName + attachedFile.getFilename(),
+                    part.getInputStream(),
+                    options);
+
+            attachedFiles.add(attachedFile);
+        }
+
+        board.setAttachedFiles(attachedFiles);
+
+        boardService.update(board);
+        return "redirect:list";
     }
 
-    board.setAttachedFiles(attachedFiles);
+    @GetMapping("delete")
+    public String delete(
+            int no,
+            HttpSession session) throws Exception {
 
-    boardService.update(board);
-    return "redirect:list";
-  }
+        User loginUser = (User) session.getAttribute("loginUser");
+        Board board = boardService.get(no);
 
-  @GetMapping("delete")
-  public String delete(
-          int no,
-          HttpSession session) throws Exception {
+        if (board == null) {
+            throw new Exception("없는 게시글입니다.");
+        } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+            throw new Exception("삭제 권한이 없습니다.");
+        }
 
-    User loginUser = (User) session.getAttribute("loginUser");
-    Board board = boardService.get(no);
+        for (AttachedFile attachedFile : board.getAttachedFiles()) {
+            try {
+                storageService.delete(folderName + attachedFile.getFilename());
+            } catch (Exception e) {
+                System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
+            }
+        }
 
-    if (board == null) {
-      throw new Exception("없는 게시글입니다.");
-    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-      throw new Exception("삭제 권한이 없습니다.");
+        boardService.delete(no);
+        return "redirect:list";
     }
 
-    for (AttachedFile attachedFile : board.getAttachedFiles()) {
-      try {
-        storageService.delete(folderName + attachedFile.getFilename());
-      } catch (Exception e) {
-        System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
-      }
+    @GetMapping("file/delete")
+    public String fileDelete(
+            HttpSession session,
+            int fileNo,
+            int boardNo) throws Exception {
+
+        User loginUser = (User) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new Exception("로그인 하지 않았습니다.");
+        }
+
+        AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
+        if (attachedFile == null) {
+            throw new Exception("없는 첨부파일입니다.");
+        }
+
+        Board board = boardService.get(attachedFile.getBoardNo());
+        if (loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+            throw new Exception("삭제 권한이 없습니다.");
+        }
+
+        try {
+            storageService.delete(folderName + attachedFile.getFilename());
+        } catch (Exception e) {
+            System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
+        }
+
+        boardService.deleteAttachedFile(fileNo);
+        return "redirect:../view?no=" + boardNo;
     }
-
-    boardService.delete(no);
-    return "redirect:list";
-  }
-
-  @GetMapping("file/delete")
-  public String fileDelete(
-          HttpSession session,
-          int fileNo,
-          int boardNo) throws Exception {
-
-    User loginUser = (User) session.getAttribute("loginUser");
-    if (loginUser == null) {
-      throw new Exception("로그인 하지 않았습니다.");
-    }
-
-    AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
-    if (attachedFile == null) {
-      throw new Exception("없는 첨부파일입니다.");
-    }
-
-    Board board = boardService.get(attachedFile.getBoardNo());
-    if (loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
-      throw new Exception("삭제 권한이 없습니다.");
-    }
-
-    try {
-      storageService.delete(folderName + attachedFile.getFilename());
-    } catch (Exception e) {
-      System.out.printf("%s 파일 삭제 실패!\n", folderName + attachedFile.getFilename());
-    }
-
-    boardService.deleteAttachedFile(fileNo);
-    return "redirect:../view?no=" + boardNo;
-  }
 
 }
