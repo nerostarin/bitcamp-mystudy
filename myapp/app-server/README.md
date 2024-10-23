@@ -1,12 +1,12 @@
-# 65. SpringBoot(2.7.x) 적용하기
+# 68. 뷰 템플릿 기술을 Thymeleaf 로 교체하기
 
 ## 학습목표
 
-- Spring Boot를 프로젝트에 적용하고 설정할 수 있다.
+- Thymeleaf 뷰 템플릿 기술을 웹 프로젝트에 적용할 수 있다.
 
 ## 요구사항
 
-- 기존의 Spring Framework 프로젝트를 Spring Boot 환경으로 설정하라.
+- JSP를 Thymeleaf로 교체하라.
 
 ## 실행 결과
 
@@ -14,9 +14,16 @@
 
 ## 작업
 
-- build.gradle 파일 변경
-- src/main/resources/application.properties 파일 생성
-- 설정에 따라 기타 파일을 변경하거나 삭제
+- JSP 제거
+  - application.properties 변경
+  - build.gradle 변경
+- build.gradle 변경
+  - Thymeleaf 의존 라이브러리 추가
+- Thymeleaf 폴더 생성
+  - src/main/resources/templates
+- Thymeleaf 설정
+  - application.properties 변경
 
+  
 ## 소스 파일
 

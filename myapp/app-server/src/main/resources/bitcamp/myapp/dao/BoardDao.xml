@@ -44,7 +44,6 @@
             b.board_id desc
         limit
             #{rowNo}, #{length}
-
     </select>
 
     <insert id="insert" parameterType="board"

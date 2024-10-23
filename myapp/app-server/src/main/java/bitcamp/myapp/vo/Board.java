@@ -9,13 +9,13 @@ import java.util.List;
 @Data
 public class Board implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private int no;
-    private String title;
-    private String content;
-    private User writer;
-    private Date createdDate;
-    private int viewCount;
-    private List<AttachedFile> attachedFiles;
+  private int no;
+  private String title;
+  private String content;
+  private User writer;
+  private Date createdDate;
+  private int viewCount;
+  private List<AttachedFile> attachedFiles;
 }
