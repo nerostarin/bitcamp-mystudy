@@ -23,7 +23,7 @@
   - src/main/resources/templates
 - Thymeleaf 설정
   - application.properties 변경
-
+- JSP 파일을 Thymeleaf 파일로 변경 
   
 ## 소스 파일
 
