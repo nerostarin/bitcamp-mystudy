@@ -7,6 +7,16 @@ plugins {
 group = 'bitcamp'
 version = '0.0.1-SNAPSHOT'
 
+bootJar{
+    archiveFileName = "${rootProject.name}.jar"
+}
+
+//jar 테스크를 수행하지 않게 설정하는 법이다
+tasks.named("jar") {
+   enabled = false
+}
+
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -28,12 +38,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

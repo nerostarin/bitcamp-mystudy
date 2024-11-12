@@ -77,6 +77,8 @@ for (var e of el) {
     // currentTarget은 리스너가 호출될 때, 그 리스너가 소속된 태그 객체를 가리킨다.
     console.log(e.currentTarget);
 
+    //console.log(e.currentTarget.getAttribute("href"));
+
     window.location.href = e.currentTarget.getAttribute("href");
   });   
 }
