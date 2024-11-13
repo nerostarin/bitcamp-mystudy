@@ -15,55 +15,72 @@
 
     <select id="list" resultMap="UserMap">
         select
-            user_id,
-            name,
-            email,
-            photo
+        user_id,
+        name,
+        email,
+        photo
         from
-            myapp_users
+        myapp_users
         order by
-            user_id asc
+        user_id asc
     </select>
 
     <insert id="insert" parameterType="user">
         insert into myapp_users(name, email, pwd, tel, photo)
-        values (#{name}, #{email}, sha1(#{password}), #{tel}, #{photo})
+        values (#{name}, #{email}, #{password}, #{tel}, #{photo})
     </insert>
 
     <select id="findBy" resultMap="UserMap" parameterType="int">
         select
-            user_id,
-            name,
-            email,
-            tel,
-            photo
+        user_id,
+        pwd,
+        name,
+        email,
+        tel,
+        photo
         from
-            myapp_users
+        myapp_users
         where
-            user_id=#{no}
+        user_id=#{no}
+    </select>
+
+    <select id="findByEmail" resultMap="UserMap" parameterType="string">
+        select
+        user_id,
+        pwd,
+        name,
+        email,
+        tel,
+        photo
+        from
+        myapp_users
+        where
+        email=#{email}
     </select>
 
     <select id="findByEmailAndPassword" resultMap="UserMap">
         select
-            user_id,
-            name,
-            email,
-            tel
+        user_id,
+        pwd,
+        name,
+        email,
+        tel,
+        photo
         from
-            myapp_users
+        myapp_users
         where
-            email=#{email} and pwd=sha1(#{password})
+        email=#{email} and pwd=sha1(#{password})
     </select>
 
     <update id="update" parameterType="user">
         update myapp_users set
-            name=#{name},
-            email=#{email},
-            pwd=sha1(#{password}),
-            tel=#{tel},
-            photo=#{photo}
+        name=#{name},
+        email=#{email},
+        pwd=#{password},
+        tel=#{tel},
+        photo=#{photo}
         where
-            user_id=#{no}
+        user_id=#{no}
     </update>
 
     <delete id="delete" parameterType="int">
