@@ -1,7 +1,8 @@
 package bitcamp.myapp.controller;
 
-import bitcamp.myapp.security08.CustomUserDetails;
+import bitcamp.myapp.security09.CustomUserDetails;
 import bitcamp.myapp.service.UserService;
+import bitcamp.myapp.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,11 +39,13 @@ public class AuthController {
             HttpServletResponse res,
             HttpSession session) throws Exception {
 
+        User user = principal.getUser();
+
         log.debug("로그인 성공!");
         log.debug(principal.toString());
 
         if (saveEmail) {
-            Cookie cookie = new Cookie("email", principal.getEmail());
+            Cookie cookie = new Cookie("email", user.getEmail());
             cookie.setMaxAge(60 * 60 * 24 * 7);
             res.addCookie(cookie);
         } else {
@@ -51,7 +54,7 @@ public class AuthController {
             res.addCookie(cookie);
         }
 
-        session.setAttribute("loginUser", principal);
+        session.setAttribute("loginUser", user);
         return "redirect:/";
     }
 
